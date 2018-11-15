@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Ирина Пыкина](https://up.htmlacademy.ru/javascript/16/user/217064).
-* Наставник: `Неизвестно`.
+* Наставник: [Роман Кунин](https://htmlacademy.ru/profile/id497465).
 
 ---
 
