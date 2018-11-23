@@ -68,8 +68,8 @@ var createArrayRandomPhotos = function () {
   return photos;
 };
 
-var cards = [
-  {
+var createRandomCard = function () {
+  var randomCard = {
     author: {
       avatar: getRandomAvatar()
     },
@@ -90,5 +90,16 @@ var cards = [
       x: getRandomLocationX(),
       y: getRandomLocationY()
     }
+  };
+  return randomCard;
+};
+
+var createArrayRandomCards = function (length) {
+  var randomCards = [];
+  for (var i = 0; i < length; i++) {
+    randomCards.push(createRandomCard());
   }
-];
+  return randomCards;
+};
+
+var cards = createArrayRandomCards(8);
