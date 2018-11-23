@@ -7,6 +7,12 @@ var CHECK_TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 
+var map = document.querySelector('.map');
+map.classList.remove('map--faded');
+
+var mapPins = map.querySelector('.map__pins');
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
 var getRandomAvatar = function () {
   var avatarIndex = Math.floor(Math.random() * AVATAR_NUMBERS.length);
   var avatarValue = AVATAR_NUMBERS[avatarIndex];
@@ -60,10 +66,11 @@ var createArrayRandomFeatures = function () {
 
 var createArrayRandomPhotos = function () {
   var photos = [];
+  var photosCopy = PHOTOS.slice();
   for (var i = 0; i < 3; i++) {
-    var photoIndex = Math.floor(Math.random() * PHOTOS.length);
-    photos.push(PHOTOS[photoIndex]);
-    PHOTOS.splice(photoIndex, 1);
+    var photoIndex = Math.floor(Math.random() * photosCopy.length);
+    photos.push(photosCopy[photoIndex]);
+    photosCopy.splice(photoIndex, 1);
   }
   return photos;
 };
@@ -103,3 +110,18 @@ var createArrayRandomCards = function (length) {
 };
 
 var cards = createArrayRandomCards(8);
+
+var renderPin = function (card) {
+  var pinElement = pinTemplate.cloneNode(true);
+  pinElement.style.left = (card.location.x + 31) + 'px';
+  pinElement.style.top = (card.location.y + 84) + 'px';
+  pinElement.querySelector('img').src = card.author.avatar;
+  pinElement.querySelector('img').alt = card.offer.title;
+  return pinElement;
+};
+
+var fragment = document.createDocumentFragment();
+for (var i = 0; i < cards.length; i++) {
+  fragment.appendChild(renderPin(cards[i]));
+}
+mapPins.appendChild(fragment);
