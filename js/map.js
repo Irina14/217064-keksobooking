@@ -180,29 +180,42 @@ var renderCard = function (notice) {
   var featuresList = cardElement.querySelector('.popup__features');
   var features = notice.offer.features;
   var featuresItems = featuresList.querySelectorAll('.popup__feature');
-  for (var j = 0; j < featuresItems.length; j++) {
-    featuresItems[j].style.display = 'none';
+  for (var i = 0; i < featuresItems.length; i++) {
+    featuresItems[i].style.display = 'none';
   }
-  for (var i = 0; i < features.length; i++) {
-    if (features[i] === 'wifi') {
+
+  for (var j = 0; j < features.length; j++) {
+    if (features[j] === 'wifi') {
       featuresList.querySelector('.popup__feature--wifi').style.display = 'inline-block';
     }
-    if (features[i] === 'dishwasher') {
+    if (features[j] === 'dishwasher') {
       featuresList.querySelector('.popup__feature--dishwasher').style.display = 'inline-block';
     }
-    if (features[i] === 'parking') {
+    if (features[j] === 'parking') {
       featuresList.querySelector('.popup__feature--parking').style.display = 'inline-block';
     }
-    if (features[i] === 'washer') {
+    if (features[j] === 'washer') {
       featuresList.querySelector('.popup__feature--washer').style.display = 'inline-block';
     }
-    if (features[i] === 'elevator') {
+    if (features[j] === 'elevator') {
       featuresList.querySelector('.popup__feature--elevator').style.display = 'inline-block';
     }
-    if (features[i] === 'conditioner') {
+    if (features[j] === 'conditioner') {
       featuresList.querySelector('.popup__feature--conditioner').style.display = 'inline-block';
     }
   }
+
+  var photos = notice.offer.photos;
+  var photosList = cardElement.querySelector('.popup__photos');
+  for (i = 0; i < photos.length; i++) {
+    photosList.querySelector('.popup__photo').src = photos[i];
+    if (i === photos.length - 1) {
+      break;
+    }
+    var photoClone = photosList.querySelector('.popup__photo').cloneNode(true);
+    photosList.appendChild(photoClone);
+  }
+
   return cardElement;
 };
 
