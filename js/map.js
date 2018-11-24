@@ -173,15 +173,41 @@ var renderCard = function (notice) {
   cardElement.querySelector('.popup__type').textContent = getType(notice.offer.type);
   cardElement.querySelector('.popup__text--capacity').textContent = notice.offer.rooms + getRooms(notice.offer.rooms) + notice.offer.guests + ' гостей';
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + notice.offer.checkin + ' выезд до ' + notice.offer.checkout;
-  cardElement.querySelector('.popup__features').querySelector('li').textContent = notice.offer.features;
   cardElement.querySelector('.popup__description').textContent = notice.offer.description;
   cardElement.querySelector('.popup__photos').querySelector('.popup__photo').src = notice.offer.photos;
   cardElement.querySelector('.popup__avatar').src = notice.author.avatar;
+
+  var featuresList = cardElement.querySelector('.popup__features');
+  var features = notice.offer.features;
+  var featuresItems = featuresList.querySelectorAll('.popup__feature');
+  for (var j = 0; j < featuresItems.length; j++) {
+    featuresItems[j].style.display = 'none';
+  }
+  for (var i = 0; i < features.length; i++) {
+    if (features[i] === 'wifi') {
+      featuresList.querySelector('.popup__feature--wifi').style.display = 'inline-block';
+    }
+    if (features[i] === 'dishwasher') {
+      featuresList.querySelector('.popup__feature--dishwasher').style.display = 'inline-block';
+    }
+    if (features[i] === 'parking') {
+      featuresList.querySelector('.popup__feature--parking').style.display = 'inline-block';
+    }
+    if (features[i] === 'washer') {
+      featuresList.querySelector('.popup__feature--washer').style.display = 'inline-block';
+    }
+    if (features[i] === 'elevator') {
+      featuresList.querySelector('.popup__feature--elevator').style.display = 'inline-block';
+    }
+    if (features[i] === 'conditioner') {
+      featuresList.querySelector('.popup__feature--conditioner').style.display = 'inline-block';
+    }
+  }
   return cardElement;
 };
 
 var fragmentCards = document.createDocumentFragment();
-for (var i = 0; i < notices.length; i++) {
+for (i = 0; i < notices.length; i++) {
   fragmentCards.appendChild(renderCard(notices[i]));
 }
 map.insertBefore(fragmentCards, mapFilters);
