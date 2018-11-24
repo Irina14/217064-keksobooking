@@ -6,12 +6,16 @@ var TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var CHECK_TIMES = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
 
 var map = document.querySelector('.map');
 map.classList.remove('map--faded');
 
 var mapPins = map.querySelector('.map__pins');
+var mapFilters = map.querySelector('.map__filters-container');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
 var getRandomAvatar = function () {
   var avatarIndex = Math.floor(Math.random() * AVATAR_NUMBERS.length);
@@ -75,8 +79,8 @@ var createArrayRandomPhotos = function () {
   return photos;
 };
 
-var createRandomCard = function () {
-  var randomCard = {
+var createRandomNotice = function () {
+  var randomNotice = {
     author: {
       avatar: getRandomAvatar()
     },
@@ -98,30 +102,64 @@ var createRandomCard = function () {
       y: getRandomLocationY()
     }
   };
-  return randomCard;
+  return randomNotice;
 };
 
-var createArrayRandomCards = function (length) {
-  var randomCards = [];
+var createArrayRandomNotices = function (length) {
+  var randomNotices = [];
   for (var i = 0; i < length; i++) {
-    randomCards.push(createRandomCard());
+    randomNotices.push(createRandomNotice());
   }
-  return randomCards;
+  return randomNotices;
 };
 
-var cards = createArrayRandomCards(8);
+var notices = createArrayRandomNotices(8);
 
-var renderPin = function (card) {
+var renderPin = function (notice) {
   var pinElement = pinTemplate.cloneNode(true);
-  pinElement.style.left = (card.location.x + 31) + 'px';
-  pinElement.style.top = (card.location.y + 84) + 'px';
-  pinElement.querySelector('img').src = card.author.avatar;
-  pinElement.querySelector('img').alt = card.offer.title;
+  pinElement.style.left = (notice.location.x - PIN_WIDTH / 2) + 'px';
+  pinElement.style.top = (notice.location.y - PIN_HEIGHT) + 'px';
+  pinElement.querySelector('img').src = notice.author.avatar;
+  pinElement.querySelector('img').alt = notice.offer.title;
   return pinElement;
 };
 
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < cards.length; i++) {
-  fragment.appendChild(renderPin(cards[i]));
+var fragmentPins = document.createDocumentFragment();
+for (var i = 0; i < notices.length; i++) {
+  fragmentPins.appendChild(renderPin(notices[i]));
 }
-mapPins.appendChild(fragment);
+mapPins.appendChild(fragmentPins);
+
+var getType = function (type) {
+  if (type === 'flat') {
+    return 'Квартира';
+  }
+  if (type === 'bungalo') {
+    return 'Бунгало';
+  }
+  if (type === 'house') {
+    return 'Дом';
+  }
+  return 'Дворец';
+};
+
+var renderCard = function (notice) {
+  var cardElement = cardTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__title').textContent = notice.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = notice.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = notice.offer.price + '₽/ночь';
+  cardElement.querySelector('.popup__type').textContent = getType(notice.offer.type);
+  cardElement.querySelector('.popup__text--capacity').textContent = notice.offer.rooms + ' комнаты для ' + notice.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + notice.offer.checkin + ' выезд до ' + notice.offer.checkout;
+  cardElement.querySelector('.popup__features').querySelector('li').textContent = notice.offer.features;
+  cardElement.querySelector('.popup__description').textContent = notice.offer.description;
+  cardElement.querySelector('.popup__photos').querySelector('.popup__photo').src = notice.offer.photos;
+  cardElement.querySelector('.popup__avatar').src = notice.author.avatar;
+  return cardElement;
+};
+
+var fragmentCards = document.createDocumentFragment();
+for (var i = 0; i < notices.length; i++) {
+  fragmentCards.appendChild(renderCard(notices[i]));
+}
+map.insertBefore(fragmentCards, mapFilters);
