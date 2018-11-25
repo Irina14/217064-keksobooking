@@ -180,6 +180,7 @@ var renderCard = function (notice) {
   var featuresList = cardElement.querySelector('.popup__features');
   var features = notice.offer.features;
   var featuresItems = featuresList.querySelectorAll('.popup__feature');
+  // eslint-disable-next-line no-shadow
   for (var i = 0; i < featuresItems.length; i++) {
     featuresItems[i].style.display = 'none';
   }
@@ -212,8 +213,8 @@ var renderCard = function (notice) {
     if (i === photos.length - 1) {
       break;
     }
-    var photoClone = photosList.querySelector('.popup__photo').cloneNode(true);
-    photosList.appendChild(photoClone);
+    var photoCopy = photosList.querySelector('.popup__photo').cloneNode(true);
+    photosList.appendChild(photoCopy);
   }
 
   return cardElement;
