@@ -102,7 +102,7 @@ var createArrayRandomPhotos = function () {
 var createRandomAd = function () {
   var locationX = getRandomLocationX();
   var locationY = getRandomLocationY();
-  var randomAd = {
+  var ad = {
     author: {
       avatar: getRandomAvatar()
     },
@@ -124,15 +124,15 @@ var createRandomAd = function () {
       y: locationY
     }
   };
-  return randomAd;
+  return ad;
 };
 
 var createArrayRandomAds = function (length) {
-  var randomAds = [];
+  var ads = [];
   for (var i = 0; i < length; i++) {
-    randomAds.push(createRandomAd());
+    ads.push(createRandomAd());
   }
-  return randomAds;
+  return ads;
 };
 
 var renderPin = function (ad) {
@@ -145,9 +145,10 @@ var renderPin = function (ad) {
 };
 
 var getType = function (type) {
+  var typeValue;
   switch (type) {
     case 'flat':
-      var typeValue = 'Квартира';
+      typeValue = 'Квартира';
       break;
     case 'bungalo':
       typeValue = 'Бунгало';
@@ -238,4 +239,4 @@ var ads = createArrayRandomAds(8);
 
 mapPinsElement.appendChild(createFragment(ads, renderPin));
 
-mapElement.insertBefore(createFragment(ads, renderCard), mapFiltersElement);
+mapElement.insertBefore(createFragment(ads, renderCard).firstChild, mapFiltersElement);
