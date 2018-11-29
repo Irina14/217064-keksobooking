@@ -8,6 +8,8 @@ var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+var PIN_MAIN_RADIUS = 31;
+var PIN_MAIN_HEIGHT = 84;
 var X_MAX = 875;
 var X_MIN = 275;
 var Y_MAX = 630;
@@ -25,6 +27,7 @@ var mapPinMainElement = mapPinsElement.querySelector('.map__pin--main');
 var mapFiltersElement = mapElement.querySelector('.map__filters-container');
 var fieldsetElement = document.querySelectorAll('fieldset');
 var adFormElement = document.querySelector('.ad-form');
+var addressInputElement = adFormElement.querySelector('#address');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
@@ -250,8 +253,27 @@ var getActiveState = function () {
 
 mapPinMainElement.addEventListener('click', function () {
   getActiveState();
+  getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
 });
 
+var getLocationX = function (element) {
+  var box = element.getBoundingClientRect();
+  return Math.round(box.left + window.pageXOffset);
+};
+
+var getLocationY = function (element) {
+  var box = element.getBoundingClientRect();
+  return Math.round(box.top + window.pageYOffset);
+};
+
+var getLocationPinMain = function (width, height) {
+  var pinMainLocationX = getLocationX(mapPinMainElement) + width;
+  var pinMainLocationY = getLocationY(mapPinMainElement) + height;
+  addressInputElement.value = pinMainLocationX + ', ' + pinMainLocationY;
+};
+
 disableFieldset(true);
+getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_RADIUS);
+addressInputElement.disabled = true;
 
 var ads = createArrayRandomAds(8);
