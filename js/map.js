@@ -23,6 +23,7 @@ var GUESTS_MIN = 2;
 
 var mapElement = document.querySelector('.map');
 var mapPinsElement = mapElement.querySelector('.map__pins');
+
 var mapPinMainElement = mapPinsElement.querySelector('.map__pin--main');
 var mapFiltersElement = mapElement.querySelector('.map__filters-container');
 var fieldsetElement = document.querySelectorAll('fieldset');
@@ -251,9 +252,13 @@ var getActiveState = function () {
   disableFieldset(false);
 };
 
+var ads = createArrayRandomAds(8);
+
 mapPinMainElement.addEventListener('click', function () {
   getActiveState();
   getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
+  mapPinsElement.appendChild(createFragment(ads, renderPin));
+  showCard();
 });
 
 var getLocationX = function (element) {
@@ -272,8 +277,37 @@ var getLocationPinMain = function (width, height) {
   addressInputElement.value = pinMainLocationX + ', ' + pinMainLocationY;
 };
 
+var showCard = function () {
+  var mapPinElement = mapPinsElement.querySelectorAll('.map__pin');
+  mapPinElement[1].addEventListener('click', function () {
+    mapElement.insertBefore(renderCard(ads[0]), mapFiltersElement);
+  });
+  mapPinElement[2].addEventListener('click', function () {
+    mapElement.insertBefore(renderCard(ads[1]), mapFiltersElement);
+  });
+  mapPinElement[3].addEventListener('click', function () {
+    mapElement.insertBefore(renderCard(ads[2]), mapFiltersElement);
+  });
+  mapPinElement[4].addEventListener('click', function () {
+    mapElement.insertBefore(renderCard(ads[3]), mapFiltersElement);
+  });
+  mapPinElement[5].addEventListener('click', function () {
+    mapElement.insertBefore(renderCard(ads[4]), mapFiltersElement);
+  });
+  mapPinElement[6].addEventListener('click', function () {
+    mapElement.insertBefore(renderCard(ads[5]), mapFiltersElement);
+  });
+  mapPinElement[7].addEventListener('click', function () {
+    mapElement.insertBefore(renderCard(ads[6]), mapFiltersElement);
+  });
+  mapPinElement[8].addEventListener('click', function () {
+    mapElement.insertBefore(renderCard(ads[7]), mapFiltersElement);
+  });
+  mapPinElement[9].addEventListener('click', function () {
+    mapElement.insertBefore(renderCard(ads[8]), mapFiltersElement);
+  });
+};
+
 disableFieldset(true);
 getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_RADIUS);
 addressInputElement.disabled = true;
-
-var ads = createArrayRandomAds(8);
