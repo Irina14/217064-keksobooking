@@ -21,7 +21,10 @@ var GUESTS_MIN = 2;
 
 var mapElement = document.querySelector('.map');
 var mapPinsElement = mapElement.querySelector('.map__pins');
+var mapPinMainElement = mapPinsElement.querySelector('.map__pin--main');
 var mapFiltersElement = mapElement.querySelector('.map__filters-container');
+var fieldsetElement = document.querySelectorAll('fieldset');
+var adFormElement = document.querySelector('.ad-form');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
@@ -233,10 +236,22 @@ var createFragment = function (array, renderElement) {
   return fragment;
 };
 
-mapElement.classList.remove('map--faded');
+var disableFieldset = function (boolean) {
+  for (var i = 0; i < fieldsetElement.length; i++) {
+    fieldsetElement[i].disabled = boolean;
+  }
+};
+
+var getActiveState = function () {
+  mapElement.classList.remove('map--faded');
+  adFormElement.classList.remove('ad-form--disabled');
+  disableFieldset(false);
+};
+
+mapPinMainElement.addEventListener('click', function () {
+  getActiveState();
+});
+
+disableFieldset(true);
 
 var ads = createArrayRandomAds(8);
-
-mapPinsElement.appendChild(createFragment(ads, renderPin));
-
-mapElement.insertBefore(createFragment(ads, renderCard).firstChild, mapFiltersElement);
