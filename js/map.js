@@ -26,7 +26,7 @@ var mapElement = document.querySelector('.map');
 var mapPinsElement = mapElement.querySelector('.map__pins');
 var mapPinMainElement = mapPinsElement.querySelector('.map__pin--main');
 var mapFiltersElement = mapElement.querySelector('.map__filters-container');
-var fieldsetElement = document.querySelectorAll('fieldset');
+var fieldsetElements = document.querySelectorAll('fieldset');
 var adFormElement = document.querySelector('.ad-form');
 var addressInputElement = adFormElement.querySelector('#address');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -241,12 +241,12 @@ var createFragmentPins = function (array) {
 };
 
 var disableFieldset = function (boolean) {
-  for (var i = 0; i < fieldsetElement.length; i++) {
-    fieldsetElement[i].disabled = boolean;
+  for (var i = 0; i < fieldsetElements.length; i++) {
+    fieldsetElements[i].disabled = boolean;
   }
 };
 
-var getActiveState = function () {
+var setActiveState = function () {
   mapElement.classList.remove('map--faded');
   adFormElement.classList.remove('ad-form--disabled');
   disableFieldset(false);
@@ -269,16 +269,16 @@ var getLocationPinMain = function (width, height) {
 };
 
 var openPopup = function () {
-  var mapPinElement = mapPinsElement.querySelectorAll('.map__pin');
-  mapPinsElement.onclick = function (evt) {
+  var mapPinElements = mapPinsElement.querySelectorAll('.map__pin');
+  mapPinsElement.addEventListener('click', function (evt) {
     var target = evt.target;
-    for (var i = 1; i < mapPinElement.length; i++) {
-      if (mapPinElement[i] === target.parentElement || mapPinElement[i] === target) {
+    for (var i = 1; i < mapPinElements.length; i++) {
+      if (mapPinElements[i] === target.parentElement || mapPinElements[i] === target) {
         mapElement.insertBefore(renderCard(ads[i - 1]), mapFiltersElement);
         closePopup();
       }
     }
-  };
+  });
 };
 
 var removePopup = function () {
@@ -302,7 +302,7 @@ var closePopup = function () {
 var ads = createArrayRandomAds(8);
 
 mapPinMainElement.addEventListener('click', function () {
-  getActiveState();
+  setActiveState();
   getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
   mapPinsElement.appendChild(createFragmentPins(ads));
   openPopup();
