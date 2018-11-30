@@ -269,44 +269,52 @@ var getLocationPinMain = function (width, height) {
 };
 
 var openPopup = function () {
-  var mapPinElements = mapPinsElement.querySelectorAll('.map__pin');
-  mapPinsElement.addEventListener('click', function (evt) {
-    var target = evt.target;
-    for (var i = 1; i < mapPinElements.length; i++) {
-      if (mapPinElements[i] === target.parentElement || mapPinElements[i] === target) {
-        mapElement.insertBefore(renderCard(ads[i - 1]), mapFiltersElement);
-        closePopup();
-      }
-    }
-  });
+  mapPinsElement.addEventListener('click', mapPinsClickHandler);
+};
+
+var closePopup = function () {
+  var popupCloseElement = mapElement.querySelector('.popup__close');
+  popupCloseElement.addEventListener('click', popupCloseClickHandler);
+  document.addEventListener('keydown', popupEscKeyHandler);
 };
 
 var removePopup = function () {
   var popupElement = mapElement.querySelector('.popup');
   mapElement.removeChild(popupElement);
+  document.removeEventListener('keydown', popupEscKeyHandler);
 };
 
-var closePopup = function () {
-  var popupCloseElement = mapElement.querySelector('.popup__close');
-  popupCloseElement.addEventListener('click', function () {
-    removePopup();
-  });
-
-  document.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      removePopup();
+var mapPinsClickHandler = function (evt) {
+  var mapPinElements = mapPinsElement.querySelectorAll('.map__pin');
+  var target = evt.target;
+  for (var i = 1; i < mapPinElements.length; i++) {
+    if (mapPinElements[i] === target.parentElement || mapPinElements[i] === target) {
+      mapElement.insertBefore(renderCard(ads[i - 1]), mapFiltersElement);
+      closePopup();
     }
-  });
+  }
 };
 
-var ads = createArrayRandomAds(8);
-
-mapPinMainElement.addEventListener('click', function () {
+var mapPinMainClickHandler = function () {
   setActiveState();
   getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
   mapPinsElement.appendChild(createFragmentPins(ads));
   openPopup();
-});
+};
+
+var popupEscKeyHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    removePopup();
+  }
+};
+
+var popupCloseClickHandler = function () {
+  removePopup();
+};
+
+var ads = createArrayRandomAds(8);
+
+mapPinMainElement.addEventListener('click', mapPinMainClickHandler);
 
 disableFieldset(true);
 getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_RADIUS);
