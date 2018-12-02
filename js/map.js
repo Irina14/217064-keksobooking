@@ -8,6 +8,8 @@ var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditio
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+var PIN_MAIN_RADIUS = 31;
+var PIN_MAIN_HEIGHT = 84;
 var X_MAX = 875;
 var X_MIN = 275;
 var Y_MAX = 630;
@@ -18,10 +20,15 @@ var ROOMS_MAX = 5;
 var ROOMS_MIN = 1;
 var GUESTS_MAX = 10;
 var GUESTS_MIN = 2;
+var ESC_KEYCODE = 27;
 
 var mapElement = document.querySelector('.map');
 var mapPinsElement = mapElement.querySelector('.map__pins');
+var mapPinMainElement = mapPinsElement.querySelector('.map__pin--main');
 var mapFiltersElement = mapElement.querySelector('.map__filters-container');
+var fieldsetElements = document.querySelectorAll('fieldset');
+var adFormElement = document.querySelector('.ad-form');
+var addressInputElement = adFormElement.querySelector('#address');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
@@ -225,18 +232,107 @@ var renderCard = function (ad) {
   return cardElement;
 };
 
-var createFragment = function (array, renderElement) {
+var createArrayPins = function (arrayAds) {
+  var arrayPins = [];
+  for (var i = 0; i < arrayAds.length; i++) {
+    arrayPins.push(renderPin(arrayAds[i]));
+  }
+  return arrayPins;
+};
+
+var createFragmentPins = function (arrayPins) {
   var fragment = document.createDocumentFragment();
-  for (var i = 0; i < array.length; i++) {
-    fragment.appendChild(renderElement(array[i]));
+  for (var i = 0; i < arrayPins.length; i++) {
+    fragment.appendChild(arrayPins[i]);
   }
   return fragment;
 };
 
-mapElement.classList.remove('map--faded');
+var disableFieldset = function (boolean) {
+  for (var i = 0; i < fieldsetElements.length; i++) {
+    fieldsetElements[i].disabled = boolean;
+  }
+};
+
+var setActiveState = function () {
+  mapElement.classList.remove('map--faded');
+  adFormElement.classList.remove('ad-form--disabled');
+  disableFieldset(false);
+};
+
+var getLocationX = function (element) {
+  var box = element.getBoundingClientRect();
+  return Math.round(box.left + window.pageXOffset);
+};
+
+var getLocationY = function (element) {
+  var box = element.getBoundingClientRect();
+  return Math.round(box.top + window.pageYOffset);
+};
+
+var getLocationPinMain = function (width, height) {
+  var pinMainLocationX = getLocationX(mapPinMainElement) + width;
+  var pinMainLocationY = getLocationY(mapPinMainElement) + height;
+  addressInputElement.value = pinMainLocationX + ', ' + pinMainLocationY;
+};
 
 var ads = createArrayRandomAds(8);
+var pins = createArrayPins(ads);
+var cards = [];
 
-mapPinsElement.appendChild(createFragment(ads, renderPin));
+var mapPinMainClickHandler = function () {
+  setActiveState();
+  getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
+  mapPinsElement.appendChild(createFragmentPins(pins));
+  showCard();
+  mapPinMainElement.removeEventListener('click', mapPinMainClickHandler);
+};
 
-mapElement.insertBefore(createFragment(ads, renderCard).firstChild, mapFiltersElement);
+mapPinMainElement.addEventListener('click', mapPinMainClickHandler);
+
+var showCard = function () {
+  mapPinsElement.addEventListener('click', mapPinsClickHandler);
+};
+
+var closeCard = function () {
+  if (cards.length !== 0) {
+    var cardCloseElement = cards[0].querySelector('.popup__close');
+    cardCloseElement.addEventListener('click', cardCloseClickHandler);
+  }
+};
+
+var mapPinsClickHandler = function (evt) {
+  removeCard();
+  var target = evt.target;
+  for (var i = 0; i < pins.length; i++) {
+    if (pins[i] === target.parentElement || pins[i] === target) {
+      var card = renderCard(ads[i]);
+      mapElement.insertBefore(card, mapFiltersElement);
+      cards.push(card);
+    }
+  }
+  document.addEventListener('keydown', cardEscKeyHandler);
+  closeCard();
+};
+
+var cardEscKeyHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    removeCard();
+  }
+};
+
+var cardCloseClickHandler = function () {
+  removeCard();
+};
+
+var removeCard = function () {
+  if (cards.length !== 0) {
+    mapElement.removeChild(cards[0]);
+    cards.shift();
+    document.removeEventListener('keydown', cardEscKeyHandler);
+  }
+};
+
+disableFieldset(true);
+getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_RADIUS);
+addressInputElement.disabled = true;
