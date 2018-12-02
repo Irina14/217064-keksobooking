@@ -280,24 +280,29 @@ var ads = createArrayRandomAds(8);
 var pins = createArrayPins(ads);
 var cards = [];
 
-disableFieldset(true);
-getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_RADIUS);
-addressInputElement.disabled = true;
-
 var mapPinMainClickHandler = function () {
   setActiveState();
   getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
   mapPinsElement.appendChild(createFragmentPins(pins));
   showCard();
+  mapPinMainElement.removeEventListener('click', mapPinMainClickHandler);
 };
+
+mapPinMainElement.addEventListener('click', mapPinMainClickHandler);
 
 var showCard = function () {
   mapPinsElement.addEventListener('click', mapPinsClickHandler);
 };
 
-mapPinMainElement.addEventListener('click', mapPinMainClickHandler);
+var closeCard = function () {
+  if (cards.length !== 0) {
+    var cardCloseElement = cards[0].querySelector('.popup__close');
+    cardCloseElement.addEventListener('click', cardCloseClickHandler);
+  }
+};
 
 var mapPinsClickHandler = function (evt) {
+  removeCard();
   var target = evt.target;
   for (var i = 0; i < pins.length; i++) {
     if (pins[i] === target.parentElement || pins[i] === target) {
@@ -310,11 +315,14 @@ var mapPinsClickHandler = function (evt) {
   closeCard();
 };
 
-var closeCard = function () {
-  if (cards.length !== 0) {
-    var cardCloseElement = cards[0].querySelector('.popup__close');
-    cardCloseElement.addEventListener('click', cardCloseClickHandler);
+var cardEscKeyHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    removeCard();
   }
+};
+
+var cardCloseClickHandler = function () {
+  removeCard();
 };
 
 var removeCard = function () {
@@ -325,12 +333,6 @@ var removeCard = function () {
   }
 };
 
-var cardEscKeyHandler = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
-    removeCard();
-  }
-};
-
-var cardCloseClickHandler = function () {
-  removeCard();
-};
+disableFieldset(true);
+getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_RADIUS);
+addressInputElement.disabled = true;
