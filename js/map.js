@@ -353,66 +353,27 @@ addressInputElement.disabled = true;
 
 var typeSelectChangeHandler = function () {
   for (var i = 0; i < typeOptionElements.length; i++) {
-    if (typeOptionElements[i].selected) {
-      if (typeOptionElements[i].value === 'bungalo') {
+    var typeOption = typeOptionElements[i];
+    if (typeOption.selected) {
+      if (typeOption.value === 'bungalo') {
         priceInputElement.min = MIN_PRICE_BUNGALO;
         priceInputElement.placeholder = MIN_PRICE_BUNGALO;
       }
-      if (typeOptionElements[i].value === 'flat') {
+      if (typeOption.value === 'flat') {
         priceInputElement.min = MIN_PRICE_FLAT;
         priceInputElement.placeholder = MIN_PRICE_FLAT;
       }
-      if (typeOptionElements[i].value === 'house') {
+      if (typeOption.value === 'house') {
         priceInputElement.min = MIN_PRICE_HOUSE;
         priceInputElement.placeholder = MIN_PRICE_HOUSE;
       }
-      if (typeOptionElements[i].value === 'palace') {
+      if (typeOption.value === 'palace') {
         priceInputElement.min = MIN_PRICE_PALACE;
         priceInputElement.placeholder = MIN_PRICE_PALACE;
       }
     }
   }
 };
-
-typeSelectElement.addEventListener('change', typeSelectChangeHandler);
-
-var getCheckTime = function (timeSelect, timeOptionsOne, timeOptionsTwo) {
-  timeSelect.addEventListener('change', function () {
-    for (var i = 0; i < timeOptionsOne.length; i++) {
-      if (timeOptionsOne[i].selected) {
-        if (timeOptionsOne[i].value === '12:00') {
-          timeOptionsTwo[0].selected = true;
-        }
-        if (timeOptionsOne[i].value === '13:00') {
-          timeOptionsTwo[1].selected = true;
-        }
-        if (timeOptionsOne[i].value === '14:00') {
-          timeOptionsTwo[2].selected = true;
-        }
-      }
-    }
-  });
-};
-
-getCheckTime(timeinSelectElement, timeinOptionElements, timeoutOptionElements);
-getCheckTime(timeoutSelectElement, timeoutOptionElements, timeinOptionElements);
-
-var copyCapacitySelect = function () {
-  return capacitySelectElement.cloneNode(true);
-};
-
-var removeCapacityOptions = function () {
-  capacitySelectElement.innerHTML = '';
-};
-
-var appendCapacityOption = function (i) {
-  var capacityOptionCopy = capacitySelectCopy[i].cloneNode(true);
-  capacitySelectElement.appendChild(capacityOptionCopy);
-};
-
-var capacitySelectCopy = copyCapacitySelect();
-removeCapacityOptions();
-appendCapacityOption(2);
 
 var roomNumberChangeHandler = function () {
   for (var i = 0; i < roomNumberOptionElements.length; i++) {
@@ -440,4 +401,43 @@ var roomNumberChangeHandler = function () {
   }
 };
 
+var copyCapacitySelect = function () {
+  return capacitySelectElement.cloneNode(true);
+};
+
+var removeCapacityOptions = function () {
+  capacitySelectElement.innerHTML = '';
+};
+
+var appendCapacityOption = function (i) {
+  var capacityOptionCopy = capacitySelectCopy[i].cloneNode(true);
+  capacitySelectElement.appendChild(capacityOptionCopy);
+};
+
+var getCheckTime = function (timeSelect, timeOptionsOne, timeOptionsTwo) {
+  timeSelect.addEventListener('change', function () {
+    for (var i = 0; i < timeOptionsOne.length; i++) {
+      if (timeOptionsOne[i].selected) {
+        if (timeOptionsOne[i].value === '12:00') {
+          timeOptionsTwo[0].selected = true;
+        }
+        if (timeOptionsOne[i].value === '13:00') {
+          timeOptionsTwo[1].selected = true;
+        }
+        if (timeOptionsOne[i].value === '14:00') {
+          timeOptionsTwo[2].selected = true;
+        }
+      }
+    }
+  });
+};
+
+getCheckTime(timeinSelectElement, timeinOptionElements, timeoutOptionElements);
+getCheckTime(timeoutSelectElement, timeoutOptionElements, timeinOptionElements);
+
+typeSelectElement.addEventListener('change', typeSelectChangeHandler);
 roomNumberSelectElement.addEventListener('change', roomNumberChangeHandler);
+
+var capacitySelectCopy = copyCapacitySelect();
+removeCapacityOptions();
+appendCapacityOption(2);
