@@ -36,6 +36,13 @@ var addressInputElement = adFormElement.querySelector('#address');
 var priceInputElement = adFormElement.querySelector('#price');
 var typeSelectElement = adFormElement.querySelector('#type');
 var typeOptionElements = typeSelectElement.options;
+var timeinSelectElement = adFormElement.querySelector('#timein');
+var timeinOptionElements = timeinSelectElement.options;
+var timeoutSelectElement = adFormElement.querySelector('#timeout');
+var timeoutOptionElements = timeoutSelectElement.options;
+var roomNumberSelectElement = adFormElement.querySelector('#room_number');
+var roomNumberOptionElements = roomNumberSelectElement.options;
+var capacitySelectElement = adFormElement.querySelector('#capacity');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
@@ -344,7 +351,7 @@ disableFieldset(true);
 getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_RADIUS);
 addressInputElement.disabled = true;
 
-var typeSelectElementChangeHandler = function () {
+var typeSelectChangeHandler = function () {
   for (var i = 0; i < typeOptionElements.length; i++) {
     if (typeOptionElements[i].selected) {
       if (typeOptionElements[i].value === 'bungalo') {
@@ -367,4 +374,70 @@ var typeSelectElementChangeHandler = function () {
   }
 };
 
-typeSelectElement.addEventListener('change', typeSelectElementChangeHandler);
+typeSelectElement.addEventListener('change', typeSelectChangeHandler);
+
+var getCheckTime = function (timeSelect, timeOptionsOne, timeOptionsTwo) {
+  timeSelect.addEventListener('change', function () {
+    for (var i = 0; i < timeOptionsOne.length; i++) {
+      if (timeOptionsOne[i].selected) {
+        if (timeOptionsOne[i].value === '12:00') {
+          timeOptionsTwo[0].selected = true;
+        }
+        if (timeOptionsOne[i].value === '13:00') {
+          timeOptionsTwo[1].selected = true;
+        }
+        if (timeOptionsOne[i].value === '14:00') {
+          timeOptionsTwo[2].selected = true;
+        }
+      }
+    }
+  });
+};
+
+getCheckTime(timeinSelectElement, timeinOptionElements, timeoutOptionElements);
+getCheckTime(timeoutSelectElement, timeoutOptionElements, timeinOptionElements);
+
+var copyCapacitySelect = function () {
+  return capacitySelectElement.cloneNode(true);
+};
+
+var removeCapacityOptions = function () {
+  capacitySelectElement.innerHTML = '';
+};
+
+var appendCapacityOption = function (i) {
+  var capacityOptionCopy = capacitySelectCopy[i].cloneNode(true);
+  capacitySelectElement.appendChild(capacityOptionCopy);
+};
+
+var capacitySelectCopy = copyCapacitySelect();
+removeCapacityOptions();
+appendCapacityOption(2);
+
+var roomNumberChangeHandler = function () {
+  for (var i = 0; i < roomNumberOptionElements.length; i++) {
+    if (roomNumberOptionElements[i].selected) {
+      if (roomNumberOptionElements[i].value === '1') {
+        removeCapacityOptions();
+        appendCapacityOption(2);
+      }
+      if (roomNumberOptionElements[i].value === '2') {
+        removeCapacityOptions();
+        appendCapacityOption(1);
+        appendCapacityOption(2);
+      }
+      if (roomNumberOptionElements[i].value === '3') {
+        removeCapacityOptions();
+        appendCapacityOption(0);
+        appendCapacityOption(1);
+        appendCapacityOption(2);
+      }
+      if (roomNumberOptionElements[i].value === '100') {
+        removeCapacityOptions();
+        appendCapacityOption(3);
+      }
+    }
+  }
+};
+
+roomNumberSelectElement.addEventListener('change', roomNumberChangeHandler);
