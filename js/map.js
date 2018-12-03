@@ -238,9 +238,9 @@ var renderCard = function (ad) {
   var photosItemElement = photosListElement.querySelector('.popup__photo');
   photosListElement.innerHTML = '';
   for (i = 0; i < photos.length; i++) {
-    var photoCopy = photosItemElement.cloneNode(true);
-    photosListElement.appendChild(photoCopy);
-    photoCopy.src = photos[i];
+    var photoCopyElement = photosItemElement.cloneNode(true);
+    photosListElement.appendChild(photoCopyElement);
+    photoCopyElement.src = photos[i];
   }
 
   return cardElement;
@@ -410,8 +410,8 @@ var removeCapacityOptions = function () {
 };
 
 var appendCapacityOption = function (i) {
-  var capacityOptionCopy = capacitySelectCopy[i].cloneNode(true);
-  capacitySelectElement.appendChild(capacityOptionCopy);
+  var capacityOptionCopyElement = capacitySelectCopyElement[i].cloneNode(true);
+  capacitySelectElement.appendChild(capacityOptionCopyElement);
 };
 
 var getCheckTime = function (timeSelect, timeOptionsOne, timeOptionsTwo) {
@@ -438,6 +438,6 @@ getCheckTime(timeoutSelectElement, timeoutOptionElements, timeinOptionElements);
 typeSelectElement.addEventListener('change', typeSelectChangeHandler);
 roomNumberSelectElement.addEventListener('change', roomNumberChangeHandler);
 
-var capacitySelectCopy = copyCapacitySelect();
+var capacitySelectCopyElement = copyCapacitySelect();
 removeCapacityOptions();
 appendCapacityOption(2);
