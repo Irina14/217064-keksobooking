@@ -21,6 +21,10 @@ var ROOMS_MIN = 1;
 var GUESTS_MAX = 10;
 var GUESTS_MIN = 2;
 var ESC_KEYCODE = 27;
+var MIN_PRICE_BUNGALO = 0;
+var MIN_PRICE_FLAT = 1000;
+var MIN_PRICE_HOUSE = 5000;
+var MIN_PRICE_PALACE = 10000;
 
 var mapElement = document.querySelector('.map');
 var mapPinsElement = mapElement.querySelector('.map__pins');
@@ -29,6 +33,9 @@ var mapFiltersElement = mapElement.querySelector('.map__filters-container');
 var fieldsetElements = document.querySelectorAll('fieldset');
 var adFormElement = document.querySelector('.ad-form');
 var addressInputElement = adFormElement.querySelector('#address');
+var priceInputElement = adFormElement.querySelector('#price');
+var typeSelectElement = adFormElement.querySelector('#type');
+var typeOptionElements = typeSelectElement.options;
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
@@ -336,3 +343,28 @@ var removeCard = function () {
 disableFieldset(true);
 getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_RADIUS);
 addressInputElement.disabled = true;
+
+var typeSelectElementChangeHandler = function () {
+  for (var i = 0; i < typeOptionElements.length; i++) {
+    if (typeOptionElements[i].selected) {
+      if (typeOptionElements[i].value === 'bungalo') {
+        priceInputElement.min = MIN_PRICE_BUNGALO;
+        priceInputElement.placeholder = MIN_PRICE_BUNGALO;
+      }
+      if (typeOptionElements[i].value === 'flat') {
+        priceInputElement.min = MIN_PRICE_FLAT;
+        priceInputElement.placeholder = MIN_PRICE_FLAT;
+      }
+      if (typeOptionElements[i].value === 'house') {
+        priceInputElement.min = MIN_PRICE_HOUSE;
+        priceInputElement.placeholder = MIN_PRICE_HOUSE;
+      }
+      if (typeOptionElements[i].value === 'palace') {
+        priceInputElement.min = MIN_PRICE_PALACE;
+        priceInputElement.placeholder = MIN_PRICE_PALACE;
+      }
+    }
+  }
+};
+
+typeSelectElement.addEventListener('change', typeSelectElementChangeHandler);
