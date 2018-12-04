@@ -294,15 +294,51 @@ var ads = createArrayRandomAds(8);
 var pins = createArrayPins(ads);
 var cards = [];
 
-var mapPinMainClickHandler = function () {
-  setActiveState();
-  getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
-  mapPinsElement.appendChild(createFragmentPins(pins));
-  showCard();
-  mapPinMainElement.removeEventListener('click', mapPinMainClickHandler);
-};
+// var mapPinMainClickHandler = function () {
+//   setActiveState();
+//   getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
+//   mapPinsElement.appendChild(createFragmentPins(pins));
+//   showCard();
+//   mapPinMainElement.removeEventListener('click', mapPinMainClickHandler);
+// };
 
-mapPinMainElement.addEventListener('click', mapPinMainClickHandler);
+// mapPinMainElement.addEventListener('click', mapPinMainClickHandler);
+
+mapPinMainElement.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var mapPinMainMouseMoveHandler = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    mapPinMainElement.style.top = (mapPinMainElement.offsetTop - shift.y) + 'px';
+    mapPinMainElement.style.left = (mapPinMainElement.offsetLeft - shift.x) + 'px';
+  };
+
+  var mapPinMainMouseUpHandler = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', mapPinMainMouseMoveHandler);
+    document.removeEventListener('mouseup', mapPinMainMouseUpHandler);
+  };
+
+  document.addEventListener('mousemove', mapPinMainMouseMoveHandler);
+  document.addEventListener('mouseup', mapPinMainMouseUpHandler);
+});
 
 var showCard = function () {
   mapPinsElement.addEventListener('click', mapPinsClickHandler);
