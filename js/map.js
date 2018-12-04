@@ -10,8 +10,10 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var PIN_MAIN_RADIUS = 31;
 var PIN_MAIN_HEIGHT = 84;
-var X_MAX = 875;
-var X_MIN = 275;
+var X_MAX_PIN = 875;
+var X_MIN_PIN = 275;
+var X_MAX = 1200;
+var X_MIN = 0;
 var Y_MAX = 630;
 var Y_MIN = 130;
 var PRICE_MAX = 1000000;
@@ -69,7 +71,7 @@ var getRandomTitle = function () {
 };
 
 var getRandomLocationX = function () {
-  return getRandomNumber(X_MIN + PIN_WIDTH / 2, X_MAX + PIN_WIDTH / 2);
+  return getRandomNumber(X_MIN_PIN + PIN_WIDTH / 2, X_MAX_PIN + PIN_WIDTH / 2);
 };
 
 var getRandomLocationY = function () {
@@ -262,6 +264,10 @@ var createFragmentPins = function (arrayPins) {
   return fragment;
 };
 
+var ads = createArrayRandomAds(8);
+var pins = createArrayPins(ads);
+var cards = [];
+
 var disableFieldset = function (boolean) {
   for (var i = 0; i < fieldsetElements.length; i++) {
     fieldsetElements[i].disabled = boolean;
@@ -274,35 +280,33 @@ var setActiveState = function () {
   disableFieldset(false);
 };
 
-var getLocationX = function (element) {
-  var box = element.getBoundingClientRect();
-  return Math.round(box.left + window.pageXOffset);
+var getLocationX = function () {
+  var x = mapPinMainElement.offsetLeft;
+  if (x < X_MIN) {
+    x = X_MIN;
+  }
+  if (x > X_MAX - PIN_MAIN_RADIUS * 2) {
+    x = X_MAX - PIN_MAIN_RADIUS * 2;
+  }
+  return x;
 };
 
-var getLocationY = function (element) {
-  var box = element.getBoundingClientRect();
-  return Math.round(box.top + window.pageYOffset);
+var getLocationY = function () {
+  var y = mapPinMainElement.offsetTop;
+  if (y < Y_MIN) {
+    y = Y_MIN;
+  }
+  if (y > Y_MAX) {
+    y = Y_MAX;
+  }
+  return y;
 };
 
 var getLocationPinMain = function (width, height) {
-  var pinMainLocationX = getLocationX(mapPinMainElement) + width;
-  var pinMainLocationY = getLocationY(mapPinMainElement) + height;
+  var pinMainLocationX = getLocationX() + width;
+  var pinMainLocationY = getLocationY() + height;
   addressInputElement.value = pinMainLocationX + ', ' + pinMainLocationY;
 };
-
-var ads = createArrayRandomAds(8);
-var pins = createArrayPins(ads);
-var cards = [];
-
-// var mapPinMainClickHandler = function () {
-//   setActiveState();
-//   getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
-//   mapPinsElement.appendChild(createFragmentPins(pins));
-//   showCard();
-//   mapPinMainElement.removeEventListener('click', mapPinMainClickHandler);
-// };
-
-// mapPinMainElement.addEventListener('click', mapPinMainClickHandler);
 
 mapPinMainElement.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
@@ -312,8 +316,11 @@ mapPinMainElement.addEventListener('mousedown', function (evt) {
     y: evt.clientY
   };
 
+  var dragged = false;
+
   var mapPinMainMouseMoveHandler = function (moveEvt) {
     moveEvt.preventDefault();
+    dragged = true;
 
     var shift = {
       x: startCoords.x - moveEvt.clientX,
@@ -325,12 +332,21 @@ mapPinMainElement.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY
     };
 
-    mapPinMainElement.style.top = (mapPinMainElement.offsetTop - shift.y) + 'px';
-    mapPinMainElement.style.left = (mapPinMainElement.offsetLeft - shift.x) + 'px';
+    mapPinMainElement.style.left = (getLocationX() - shift.x) + 'px';
+    mapPinMainElement.style.top = (getLocationY() - shift.y) + 'px';
+
+    getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
   };
 
   var mapPinMainMouseUpHandler = function (upEvt) {
     upEvt.preventDefault();
+
+    if (dragged) {
+      setActiveState();
+      getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
+      mapPinsElement.appendChild(createFragmentPins(pins));
+      showCard();
+    }
 
     document.removeEventListener('mousemove', mapPinMainMouseMoveHandler);
     document.removeEventListener('mouseup', mapPinMainMouseUpHandler);
