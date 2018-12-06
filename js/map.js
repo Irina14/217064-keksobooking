@@ -10,8 +10,10 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var PIN_MAIN_RADIUS = 31;
 var PIN_MAIN_HEIGHT = 84;
-var X_MAX = 875;
-var X_MIN = 275;
+var X_MAX_PIN = 875;
+var X_MIN_PIN = 275;
+var X_MAX = 1200;
+var X_MIN = 0;
 var Y_MAX = 630;
 var Y_MIN = 130;
 var PRICE_MAX = 1000000;
@@ -69,7 +71,7 @@ var getRandomTitle = function () {
 };
 
 var getRandomLocationX = function () {
-  return getRandomNumber(X_MIN + PIN_WIDTH / 2, X_MAX + PIN_WIDTH / 2);
+  return getRandomNumber(X_MIN_PIN + PIN_WIDTH / 2, X_MAX_PIN + PIN_WIDTH / 2);
 };
 
 var getRandomLocationY = function () {
@@ -238,9 +240,9 @@ var renderCard = function (ad) {
   var photosItemElement = photosListElement.querySelector('.popup__photo');
   photosListElement.innerHTML = '';
   for (i = 0; i < photos.length; i++) {
-    var photoCopy = photosItemElement.cloneNode(true);
-    photosListElement.appendChild(photoCopy);
-    photoCopy.src = photos[i];
+    var photoCopyElement = photosItemElement.cloneNode(true);
+    photosListElement.appendChild(photoCopyElement);
+    photoCopyElement.src = photos[i];
   }
 
   return cardElement;
@@ -262,6 +264,10 @@ var createFragmentPins = function (arrayPins) {
   return fragment;
 };
 
+var ads = createArrayRandomAds(8);
+var pins = createArrayPins(ads);
+var cards = [];
+
 var disableFieldset = function (boolean) {
   for (var i = 0; i < fieldsetElements.length; i++) {
     fieldsetElements[i].disabled = boolean;
@@ -274,35 +280,81 @@ var setActiveState = function () {
   disableFieldset(false);
 };
 
-var getLocationX = function (element) {
-  var box = element.getBoundingClientRect();
-  return Math.round(box.left + window.pageXOffset);
+var getLocationX = function () {
+  var x = mapPinMainElement.offsetLeft;
+  if (x < X_MIN) {
+    x = X_MIN;
+  }
+  if (x > X_MAX - PIN_MAIN_RADIUS * 2) {
+    x = X_MAX - PIN_MAIN_RADIUS * 2;
+  }
+  return x;
 };
 
-var getLocationY = function (element) {
-  var box = element.getBoundingClientRect();
-  return Math.round(box.top + window.pageYOffset);
+var getLocationY = function () {
+  var y = mapPinMainElement.offsetTop;
+  if (y < Y_MIN) {
+    y = Y_MIN;
+  }
+  if (y > Y_MAX) {
+    y = Y_MAX;
+  }
+  return y;
 };
 
 var getLocationPinMain = function (width, height) {
-  var pinMainLocationX = getLocationX(mapPinMainElement) + width;
-  var pinMainLocationY = getLocationY(mapPinMainElement) + height;
+  var pinMainLocationX = getLocationX() + width;
+  var pinMainLocationY = getLocationY() + height;
   addressInputElement.value = pinMainLocationX + ', ' + pinMainLocationY;
 };
 
-var ads = createArrayRandomAds(8);
-var pins = createArrayPins(ads);
-var cards = [];
+mapPinMainElement.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
 
-var mapPinMainClickHandler = function () {
-  setActiveState();
-  getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
-  mapPinsElement.appendChild(createFragmentPins(pins));
-  showCard();
-  mapPinMainElement.removeEventListener('click', mapPinMainClickHandler);
-};
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
 
-mapPinMainElement.addEventListener('click', mapPinMainClickHandler);
+  var dragged = false;
+
+  var mapPinMainMouseMoveHandler = function (moveEvt) {
+    moveEvt.preventDefault();
+    dragged = true;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    mapPinMainElement.style.left = (getLocationX() - shift.x) + 'px';
+    mapPinMainElement.style.top = (getLocationY() - shift.y) + 'px';
+
+    getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
+  };
+
+  var mapPinMainMouseUpHandler = function (upEvt) {
+    upEvt.preventDefault();
+
+    if (dragged) {
+      setActiveState();
+      getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
+      mapPinsElement.appendChild(createFragmentPins(pins));
+      showCard();
+    }
+
+    document.removeEventListener('mousemove', mapPinMainMouseMoveHandler);
+    document.removeEventListener('mouseup', mapPinMainMouseUpHandler);
+  };
+
+  document.addEventListener('mousemove', mapPinMainMouseMoveHandler);
+  document.addEventListener('mouseup', mapPinMainMouseUpHandler);
+});
 
 var showCard = function () {
   mapPinsElement.addEventListener('click', mapPinsClickHandler);
@@ -353,66 +405,27 @@ addressInputElement.disabled = true;
 
 var typeSelectChangeHandler = function () {
   for (var i = 0; i < typeOptionElements.length; i++) {
-    if (typeOptionElements[i].selected) {
-      if (typeOptionElements[i].value === 'bungalo') {
+    var typeOption = typeOptionElements[i];
+    if (typeOption.selected) {
+      if (typeOption.value === 'bungalo') {
         priceInputElement.min = MIN_PRICE_BUNGALO;
         priceInputElement.placeholder = MIN_PRICE_BUNGALO;
       }
-      if (typeOptionElements[i].value === 'flat') {
+      if (typeOption.value === 'flat') {
         priceInputElement.min = MIN_PRICE_FLAT;
         priceInputElement.placeholder = MIN_PRICE_FLAT;
       }
-      if (typeOptionElements[i].value === 'house') {
+      if (typeOption.value === 'house') {
         priceInputElement.min = MIN_PRICE_HOUSE;
         priceInputElement.placeholder = MIN_PRICE_HOUSE;
       }
-      if (typeOptionElements[i].value === 'palace') {
+      if (typeOption.value === 'palace') {
         priceInputElement.min = MIN_PRICE_PALACE;
         priceInputElement.placeholder = MIN_PRICE_PALACE;
       }
     }
   }
 };
-
-typeSelectElement.addEventListener('change', typeSelectChangeHandler);
-
-var getCheckTime = function (timeSelect, timeOptionsOne, timeOptionsTwo) {
-  timeSelect.addEventListener('change', function () {
-    for (var i = 0; i < timeOptionsOne.length; i++) {
-      if (timeOptionsOne[i].selected) {
-        if (timeOptionsOne[i].value === '12:00') {
-          timeOptionsTwo[0].selected = true;
-        }
-        if (timeOptionsOne[i].value === '13:00') {
-          timeOptionsTwo[1].selected = true;
-        }
-        if (timeOptionsOne[i].value === '14:00') {
-          timeOptionsTwo[2].selected = true;
-        }
-      }
-    }
-  });
-};
-
-getCheckTime(timeinSelectElement, timeinOptionElements, timeoutOptionElements);
-getCheckTime(timeoutSelectElement, timeoutOptionElements, timeinOptionElements);
-
-var copyCapacitySelect = function () {
-  return capacitySelectElement.cloneNode(true);
-};
-
-var removeCapacityOptions = function () {
-  capacitySelectElement.innerHTML = '';
-};
-
-var appendCapacityOption = function (i) {
-  var capacityOptionCopy = capacitySelectCopy[i].cloneNode(true);
-  capacitySelectElement.appendChild(capacityOptionCopy);
-};
-
-var capacitySelectCopy = copyCapacitySelect();
-removeCapacityOptions();
-appendCapacityOption(2);
 
 var roomNumberChangeHandler = function () {
   for (var i = 0; i < roomNumberOptionElements.length; i++) {
@@ -440,4 +453,43 @@ var roomNumberChangeHandler = function () {
   }
 };
 
+var copyCapacitySelect = function () {
+  return capacitySelectElement.cloneNode(true);
+};
+
+var removeCapacityOptions = function () {
+  capacitySelectElement.innerHTML = '';
+};
+
+var appendCapacityOption = function (i) {
+  var capacityOptionCopyElement = capacitySelectCopyElement[i].cloneNode(true);
+  capacitySelectElement.appendChild(capacityOptionCopyElement);
+};
+
+var getCheckTime = function (timeSelect, timeOptionsOne, timeOptionsTwo) {
+  timeSelect.addEventListener('change', function () {
+    for (var i = 0; i < timeOptionsOne.length; i++) {
+      if (timeOptionsOne[i].selected) {
+        if (timeOptionsOne[i].value === '12:00') {
+          timeOptionsTwo[0].selected = true;
+        }
+        if (timeOptionsOne[i].value === '13:00') {
+          timeOptionsTwo[1].selected = true;
+        }
+        if (timeOptionsOne[i].value === '14:00') {
+          timeOptionsTwo[2].selected = true;
+        }
+      }
+    }
+  });
+};
+
+getCheckTime(timeinSelectElement, timeinOptionElements, timeoutOptionElements);
+getCheckTime(timeoutSelectElement, timeoutOptionElements, timeinOptionElements);
+
+typeSelectElement.addEventListener('change', typeSelectChangeHandler);
 roomNumberSelectElement.addEventListener('change', roomNumberChangeHandler);
+
+var capacitySelectCopyElement = copyCapacitySelect();
+removeCapacityOptions();
+appendCapacityOption(2);
