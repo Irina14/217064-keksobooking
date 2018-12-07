@@ -318,14 +318,17 @@ mapPinMainElement.addEventListener('mousedown', function (evt) {
 
   var dragged = false;
 
-  var mapPinMainMouseMoveHandler = function (moveEvt) {
+  var documentMouseMoveHandler = function (moveEvt) {
     moveEvt.preventDefault();
-    dragged = true;
 
     var shift = {
       x: startCoords.x - moveEvt.clientX,
       y: startCoords.y - moveEvt.clientY
     };
+
+    if (shift.x !== 0 && shift.y !== 0) {
+      dragged = true;
+    }
 
     startCoords = {
       x: moveEvt.clientX,
@@ -338,7 +341,7 @@ mapPinMainElement.addEventListener('mousedown', function (evt) {
     getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
   };
 
-  var mapPinMainMouseUpHandler = function (upEvt) {
+  var documentMouseUpHandler = function (upEvt) {
     upEvt.preventDefault();
 
     if (dragged) {
@@ -348,12 +351,12 @@ mapPinMainElement.addEventListener('mousedown', function (evt) {
       showCard();
     }
 
-    document.removeEventListener('mousemove', mapPinMainMouseMoveHandler);
-    document.removeEventListener('mouseup', mapPinMainMouseUpHandler);
+    document.removeEventListener('mousemove', documentMouseMoveHandler);
+    document.removeEventListener('mouseup', documentMouseUpHandler);
   };
 
-  document.addEventListener('mousemove', mapPinMainMouseMoveHandler);
-  document.addEventListener('mouseup', mapPinMainMouseUpHandler);
+  document.addEventListener('mousemove', documentMouseMoveHandler);
+  document.addEventListener('mouseup', documentMouseUpHandler);
 });
 
 var showCard = function () {
