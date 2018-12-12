@@ -17,6 +17,10 @@
   var roomNumberSelectElement = adFormElement.querySelector('#room_number');
   var roomNumberOptionElements = roomNumberSelectElement.options;
   var capacitySelectElement = adFormElement.querySelector('#capacity');
+  var resetButtonElement = adFormElement.querySelector('.ad-form__reset');
+  var submitButtonElement = adFormElement.querySelector('.ad-form__submit');
+  var mainElement = document.querySelector('main');
+
 
   var typeSelectChangeHandler = function () {
     for (var i = 0; i < typeOptionElements.length; i++) {
@@ -99,17 +103,70 @@
     });
   };
 
-  getCheckTime(timeinSelectElement, timeinOptionElements, timeoutOptionElements);
-  getCheckTime(timeoutSelectElement, timeoutOptionElements, timeinOptionElements);
+  var successHandler = function () {
+    adFormElement.reset();
+    window.map.setInactiveState();
+    typeSelectChangeHandler();
+    mainElement.appendChild(window.renderMessage.renderSuccessMessageForm());
+    submitButtonElement.disabled = false;
+  };
 
+  var errorHandler = function (errorMessage) {
+    mainElement.appendChild(window.renderMessage.renderErrorMessageForm(errorMessage));
+    submitButtonElement.disabled = false;
+  };
+
+  var adFormSubmitHandler = function (evt) {
+    window.backend.upload(new FormData(adFormElement), successHandler, errorHandler);
+    evt.preventDefault();
+    submitButtonElement.disabled = true;
+  };
+
+  var documentEscKeyHandler = function (evt) {
+    window.util.isEscEvent(evt, closeSuccessMessage);
+    window.util.isEscEvent(evt, closeErrorMessage);
+  };
+
+  var documentClickHandler = function () {
+    closeSuccessMessage();
+    closeErrorMessage();
+  };
+
+  var closeSuccessMessage = function () {
+    var successElement = document.querySelector('.success');
+    if (successElement) {
+      mainElement.removeChild(successElement);
+    }
+  };
+
+  var closeErrorMessage = function () {
+    var errorElement = document.querySelector('.error');
+    if (errorElement) {
+      mainElement.removeChild(errorElement);
+    }
+  };
+
+  var resetButtonClickHandler = function (evt) {
+    evt.preventDefault();
+    successHandler();
+  };
+
+  adFormElement.addEventListener('submit', adFormSubmitHandler);
+  resetButtonElement.addEventListener('click', resetButtonClickHandler);
+  document.addEventListener('keydown', documentEscKeyHandler);
+  document.addEventListener('click', documentClickHandler);
   typeSelectElement.addEventListener('change', typeSelectChangeHandler);
   roomNumberSelectElement.addEventListener('change', roomNumberChangeHandler);
+
+  getCheckTime(timeinSelectElement, timeinOptionElements, timeoutOptionElements);
+  getCheckTime(timeoutSelectElement, timeoutOptionElements, timeinOptionElements);
 
   var capacitySelectCopyElement = copyCapacitySelect();
   removeCapacityOptions();
   appendCapacityOption(2);
 
   window.form = {
-    adFormElement: adFormElement
+    adFormElement: adFormElement,
+    mainElement: mainElement
   };
 })();
