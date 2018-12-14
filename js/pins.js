@@ -5,8 +5,12 @@
 
   var createArrayPins = function (arrayAds) {
     var arrayPins = [];
-    for (var i = 0; i < arrayAds.length; i++) {
-      arrayPins.push(window.renderPin(arrayAds[i]));
+    var arrayAdsCopy = arrayAds.slice();
+    if (arrayAdsCopy.length > 5) {
+      arrayAdsCopy.length = 5;
+    }
+    for (var i = 0; i < arrayAdsCopy.length; i++) {
+      arrayPins.push(window.renderPin(arrayAdsCopy[i]));
     }
     return arrayPins;
   };

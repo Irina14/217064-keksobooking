@@ -12,39 +12,17 @@
 
   var mapElement = document.querySelector('.map');
   var mapPinMainElement = mapElement.querySelector('.map__pin--main');
-  var mapFiltersElement = mapElement.querySelector('.map__filters-container');
   var fieldsetElements = document.querySelectorAll('fieldset');
   var addressInputElement = window.form.adFormElement.querySelector('#address');
   var cards = [];
-  var ads = [];
 
   var successHandler = function (data) {
-    ads = data;
-
-    var mapPinsClickHandler = function (evt) {
-      var mapPinElements = document.querySelectorAll('[type=button]');
-      removeCard();
-      var target = evt.target;
-      for (var i = 0; i < mapPinElements.length; i++) {
-        if (mapPinElements[i] === target.parentElement || mapPinElements[i] === target) {
-          var card = window.renderCard(ads[i]);
-          mapElement.insertBefore(card, mapFiltersElement);
-          cards.push(card);
-          mapPinElements[i].classList.add('map__pin--active');
-        }
-      }
-      document.addEventListener('keydown', documentEscKeyHandler);
-      closeCard();
-    };
-
-    var showCard = function () {
-      window.pins.mapPinsElement.addEventListener('click', mapPinsClickHandler);
-    };
+    var ads = data;
 
     setActiveState();
     getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
     window.pins.showPins(ads);
-    showCard();
+    window.showCard(ads);
     window.filter.updateAds(ads);
   };
 
@@ -191,7 +169,11 @@
 
   window.map = {
     setInactiveState: setInactiveState,
-    ads: ads,
-    removePins: removePins
+    removePins: removePins,
+    closeCard: closeCard,
+    removeCard: removeCard,
+    mapElement: mapElement,
+    cards: cards,
+    documentEscKeyHandler: documentEscKeyHandler
   };
 })();
