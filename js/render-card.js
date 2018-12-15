@@ -37,8 +37,6 @@
     var featuresItemElements = featuresListElement.querySelectorAll('.popup__feature');
     var photosListElement = cardElement.querySelector('.popup__photos');
     var photosItemElement = photosListElement.querySelector('.popup__photo');
-    var features = ad.offer.features;
-    var photos = ad.offer.photos;
 
     cardElement.querySelector('.popup__title').textContent = ad.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = ad.offer.address;
@@ -58,6 +56,8 @@
     } else {
       cardElement.querySelector('.popup__avatar').src = 'img/avatars/default.png';
     }
+
+    var features = ad.offer.features;
 
     if (features.length !== 0) {
       for (var i = 0; i < featuresItemElements.length; i++) {
@@ -88,6 +88,8 @@
       featuresListElement.style.display = 'none';
     }
 
+    var photos = ad.offer.photos;
+
     if (photos.length !== 0) {
       photosListElement.innerHTML = '';
       for (i = 0; i < photos.length; i++) {
@@ -98,7 +100,6 @@
     } else {
       photosListElement.style.display = 'none';
     }
-
     return cardElement;
   };
 })();
