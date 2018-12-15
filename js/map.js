@@ -135,14 +135,14 @@
   };
 
   var removeCard = function () {
-    var mapPinElements = document.querySelectorAll('[type=button]');
     if (cards.length !== 0) {
+      var mapPinElements = document.querySelectorAll('[type=button]');
       mapElement.removeChild(cards[0]);
       cards.shift();
       document.removeEventListener('keydown', documentEscKeyHandler);
-    }
-    for (var i = 0; i < mapPinElements.length; i++) {
-      mapPinElements[i].classList.remove('map__pin--active');
+      for (var i = 0; i < mapPinElements.length; i++) {
+        mapPinElements[i].classList.remove('map__pin--active');
+      }
     }
   };
 
