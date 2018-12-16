@@ -14,12 +14,14 @@
   var featuresInputElements = featuresElement.querySelectorAll('.map__checkbox');
 
   var updateAds = function (ads) {
-    var filterChangeHandler = function () {
-      var showPinsAndCard = function (arrayAds) {
+    var getFilterAds = function () {
+      var showPinsAndCard = function () {
         window.map.removeCard();
         window.map.removePins();
-        window.pins.showPins(arrayAds);
-        window.showCard(arrayAds);
+        if (filterAds.length !== 0) {
+          window.pins.showPins(filterAds);
+          window.showCard(filterAds);
+        }
       };
 
       var getValueOption = function (optionElements) {
@@ -275,7 +277,11 @@
         filterAds = ads;
       }
 
-      showPinsAndCard(filterAds);
+      showPinsAndCard();
+    };
+
+    var filterChangeHandler = function () {
+      window.debounce(getFilterAds);
     };
 
     filtersElement.addEventListener('change', filterChangeHandler);
