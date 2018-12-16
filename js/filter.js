@@ -14,368 +14,260 @@
   var featuresInputElements = featuresElement.querySelectorAll('.map__checkbox');
 
   var updateAds = function (ads) {
-    var showPinsAndCard = function (arrayAds) {
-      window.map.removePins();
-      window.pins.showPins(arrayAds);
-      window.showCard(arrayAds);
-    };
+    var filterChangeHandler = function () {
+      var showPinsAndCard = function (arrayAds) {
+        window.map.removeCard();
+        window.map.removePins();
+        window.pins.showPins(arrayAds);
+        window.showCard(arrayAds);
+      };
 
-    var selectChangeHandler = function () {
-      var features = [];
+      var getValueOption = function (optionElements) {
+        for (var i = 0; i < optionElements.length; i++) {
+          if (optionElements[i].selected) {
+            var value = optionElements[i].value;
+          }
+        }
+        return value;
+      };
 
-      for (var i = 0; i < typeOptionElements.length; i++) {
-        if (typeOptionElements[i].selected) {
-          var type = typeOptionElements[i].value;
+      var getValueFeatures = function () {
+        var value = [];
+        for (var i = 0; i < featuresInputElements.length; i++) {
+          if (featuresInputElements[i].checked) {
+            value.push(featuresInputElements[i].value);
+          }
         }
-      }
-      for (i = 0; i < roomsOptionElements.length; i++) {
-        if (roomsOptionElements[i].selected) {
-          var rooms = roomsOptionElements[i].value;
+        return value;
+      };
+
+      var filterType = function (ad) {
+        return ad.offer.type === type;
+      };
+
+      var filterPrice = function (ad) {
+        var result;
+        if (price === 'low') {
+          result = ad.offer.price < 10000;
         }
-      }
-      for (i = 0; i < priceOptionElements.length; i++) {
-        if (priceOptionElements[i].selected) {
-          var price = priceOptionElements[i].value;
+        if (price === 'middle') {
+          result = ad.offer.price >= 10000 && ad.offer.price < 50000;
         }
-      }
-      for (i = 0; i < guestsOptionElements.length; i++) {
-        if (guestsOptionElements[i].selected) {
-          var guests = guestsOptionElements[i].value;
+        if (price === 'high') {
+          result = ad.offer.price >= 50000;
         }
-      }
-      for (i = 0; i < featuresInputElements.length; i++) {
-        if (featuresInputElements[i].checked) {
-          features.push(featuresInputElements[i].value);
+        return result;
+      };
+
+      var filterRooms = function (ad) {
+        return ad.offer.rooms === parseInt(rooms, 10);
+      };
+
+      var filterGuests = function (ad) {
+        return ad.offer.guests === parseInt(guests, 10);
+      };
+
+      var filterFeatures = function (ad) {
+        for (var i = 0; i < features.length; i++) {
+          if (ad.offer.features.includes(features[i])) {
+            var result = true;
+          } else {
+            result = false;
+            break;
+          }
         }
-      }
+        return result;
+      };
+
+      var type = getValueOption(typeOptionElements);
+      var rooms = getValueOption(roomsOptionElements);
+      var price = getValueOption(priceOptionElements);
+      var guests = getValueOption(guestsOptionElements);
+      var features = getValueFeatures();
 
       if (type !== 'any' && price === 'any' && rooms === 'any' && guests === 'any' && features.length === 0) {
         var filterAds = ads.filter(function (ad) {
-          return ad.offer.type === type;
+          return filterType(ad);
         });
       }
 
       if (type === 'any' && price !== 'any' && rooms === 'any' && guests === 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result;
+          return filterPrice(ad);
         });
       }
 
       if (type === 'any' && price === 'any' && rooms !== 'any' && guests === 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.rooms === parseInt(rooms, 10);
+          return filterRooms(ad);
         });
       }
 
       if (type === 'any' && price === 'any' && rooms === 'any' && guests !== 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.guests === parseInt(guests, 10);
+          return filterGuests(ad);
         });
       }
 
       if (type !== 'any' && price !== 'any' && rooms === 'any' && guests === 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.type === type;
+          return filterType(ad) && filterPrice(ad);
         });
       }
 
       if (type !== 'any' && price === 'any' && rooms !== 'any' && guests === 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.type === type && ad.offer.rooms === parseInt(rooms, 10);
+          return filterType(ad) && filterRooms(ad);
         });
       }
 
       if (type !== 'any' && price === 'any' && rooms === 'any' && guests !== 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.type === type && ad.offer.guests === parseInt(guests, 10);
+          return filterType(ad) && filterGuests(ad);
         });
       }
 
       if (type === 'any' && price === 'any' && rooms !== 'any' && guests !== 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.rooms === parseInt(rooms, 10) && ad.offer.guests === parseInt(guests, 10);
+          return filterRooms(ad) && filterGuests(ad);
         });
       }
 
       if (type === 'any' && price !== 'any' && rooms !== 'any' && guests === 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.rooms === parseInt(rooms, 10);
+          return filterPrice(ad) && filterRooms(ad);
         });
       }
 
       if (type === 'any' && price !== 'any' && rooms === 'any' && guests !== 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.guests === parseInt(guests, 10);
+          return filterPrice(ad) && filterGuests(ad);
         });
       }
 
       if (type !== 'any' && price !== 'any' && rooms !== 'any' && guests === 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.type === type && ad.offer.rooms === parseInt(rooms, 10);
+          return filterType(ad) && filterPrice(ad) && filterRooms(ad);
         });
       }
 
       if (type !== 'any' && price !== 'any' && rooms === 'any' && guests !== 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.type === type && ad.offer.guests === parseInt(guests, 10);
+          return filterType(ad) && filterPrice(ad) && filterGuests(ad);
         });
       }
 
       if (type === 'any' && price !== 'any' && rooms !== 'any' && guests !== 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.rooms === parseInt(rooms, 10) && ad.offer.guests === parseInt(guests, 10);
+          return filterPrice(ad) && filterRooms(ad) && filterGuests(ad);
         });
       }
 
       if (type !== 'any' && price === 'any' && rooms !== 'any' && guests !== 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.type === type && ad.offer.rooms === parseInt(rooms, 10) && ad.offer.guests === parseInt(guests, 10);
+          return filterType(ad) && filterRooms(ad) && filterGuests(ad);
         });
       }
 
       if (type !== 'any' && price !== 'any' && rooms !== 'any' && guests !== 'any' && features.length === 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.type === type && ad.offer.rooms === parseInt(rooms, 10) && ad.offer.guests === parseInt(guests, 10);
+          return filterType(ad) && filterPrice(ad) && filterRooms(ad) && filterGuests(ad);
         });
       }
 
       if (type === 'any' && price === 'any' && rooms === 'any' && guests === 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.features.sort().toString() === features.sort().toString();
+          return filterFeatures(ad);
         });
       }
 
       if (type !== 'any' && price === 'any' && rooms === 'any' && guests === 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.type === type && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterType(ad) && filterFeatures(ad);
         });
       }
 
       if (type === 'any' && price !== 'any' && rooms === 'any' && guests === 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterPrice(ad) && filterFeatures(ad);
         });
       }
 
       if (type === 'any' && price === 'any' && rooms !== 'any' && guests === 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.rooms === parseInt(rooms, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterRooms(ad) && filterFeatures(ad);
         });
       }
 
       if (type === 'any' && price === 'any' && rooms === 'any' && guests !== 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.guests === parseInt(guests, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterGuests(ad) && filterFeatures(ad);
         });
       }
 
       if (type !== 'any' && price !== 'any' && rooms === 'any' && guests === 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.type === type && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterType(ad) && filterPrice(ad) && filterFeatures(ad);
         });
       }
 
       if (type === 'any' && price !== 'any' && rooms !== 'any' && guests === 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.rooms === parseInt(rooms, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterPrice(ad) && filterRooms(ad) && filterFeatures(ad);
+        });
+      }
+
+      if (type === 'any' && price !== 'any' && rooms === 'any' && guests !== 'any' && features.length !== 0) {
+        filterAds = ads.filter(function (ad) {
+          return filterPrice(ad) && filterGuests(ad) && filterFeatures(ad);
         });
       }
 
       if (type === 'any' && price === 'any' && rooms !== 'any' && guests !== 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.rooms === parseInt(rooms, 10) && ad.offer.guests === parseInt(guests, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterRooms(ad) && filterGuests(ad) && filterFeatures(ad);
         });
       }
 
       if (type !== 'any' && price === 'any' && rooms !== 'any' && guests === 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.type === type && ad.offer.rooms === parseInt(rooms, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterType(ad) && filterRooms(ad) && filterFeatures(ad);
         });
       }
 
       if (type !== 'any' && price === 'any' && rooms === 'any' && guests !== 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.type === type && ad.offer.guests === parseInt(guests, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterType(ad) && filterGuests(ad) && filterFeatures(ad);
         });
       }
 
       if (type !== 'any' && price !== 'any' && rooms !== 'any' && guests === 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.type === type && ad.offer.rooms === parseInt(rooms, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterType(ad) && filterPrice(ad) && filterRooms(ad) && filterFeatures(ad);
         });
       }
 
       if (type === 'any' && price !== 'any' && rooms !== 'any' && guests !== 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.rooms === parseInt(rooms, 10) && ad.offer.guests === parseInt(guests, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterPrice(ad) && filterRooms(ad) && filterGuests(ad) && filterFeatures(ad);
         });
       }
 
       if (type !== 'any' && price === 'any' && rooms !== 'any' && guests !== 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          return ad.offer.type === type && ad.offer.rooms === parseInt(rooms, 10) && ad.offer.guests === parseInt(guests, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterType(ad) && filterRooms(ad) && filterGuests(ad) && filterFeatures(ad);
         });
       }
 
       if (type !== 'any' && price !== 'any' && rooms === 'any' && guests !== 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.type === type && ad.offer.guests === parseInt(guests, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterType(ad) && filterPrice(ad) && filterGuests(ad) && filterFeatures(ad);
         });
       }
 
       if (type !== 'any' && price !== 'any' && rooms !== 'any' && guests !== 'any' && features.length !== 0) {
         filterAds = ads.filter(function (ad) {
-          var result;
-          if (price === 'low') {
-            result = ad.offer.price < 10000;
-          }
-          if (price === 'middle') {
-            result = ad.offer.price >= 10000 && ad.offer.price < 50000;
-          }
-          if (price === 'high') {
-            result = ad.offer.price >= 50000;
-          }
-          return result && ad.offer.type === type && ad.offer.rooms === parseInt(rooms, 10) && ad.offer.guests === parseInt(guests, 10) && ad.offer.features.sort().toString() === features.sort().toString();
+          return filterType(ad) && filterPrice(ad) && filterRooms(ad) && filterGuests(ad) && filterFeatures(ad);
         });
       }
 
@@ -386,11 +278,7 @@
       showPinsAndCard(filterAds);
     };
 
-    typeSelectElement.addEventListener('change', selectChangeHandler);
-    roomsSelectElement.addEventListener('change', selectChangeHandler);
-    priceSelectElement.addEventListener('change', selectChangeHandler);
-    guestsSelectElement.addEventListener('change', selectChangeHandler);
-    featuresElement.addEventListener('change', selectChangeHandler);
+    filtersElement.addEventListener('change', filterChangeHandler);
   };
 
   window.filter = {
