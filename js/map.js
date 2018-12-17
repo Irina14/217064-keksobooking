@@ -17,8 +17,8 @@
   var cards = [];
 
   var successHandler = function (data) {
-    var ads = data;
-
+    var loadAds = data;
+    var ads = window.getSortAds(loadAds).slice(0, 5);
     setActiveState();
     getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
     window.pins.showPins(ads);
@@ -174,6 +174,8 @@
     removeCard: removeCard,
     mapElement: mapElement,
     cards: cards,
-    documentEscKeyHandler: documentEscKeyHandler
+    documentEscKeyHandler: documentEscKeyHandler,
+    getLocationX: getLocationX,
+    getLocationY: getLocationY
   };
 })();
