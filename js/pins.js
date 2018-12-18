@@ -6,17 +6,17 @@
   var createArrayPins = function (arrayAds) {
     var arrayPins = [];
     var arrayAdsCopy = arrayAds.slice();
-    for (var i = 0; i < arrayAdsCopy.length; i++) {
-      arrayPins.push(window.renderPin(arrayAdsCopy[i]));
-    }
+    arrayAdsCopy.forEach(function (ad) {
+      arrayPins.push(window.renderPin(ad));
+    });
     return arrayPins;
   };
 
   var createFragmentPins = function (arrayPins) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < arrayPins.length; i++) {
-      fragment.appendChild(arrayPins[i]);
-    }
+    arrayPins.forEach(function (pin) {
+      fragment.appendChild(pin);
+    });
     return fragment;
   };
 

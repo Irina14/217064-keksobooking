@@ -60,30 +60,30 @@
     var features = ad.offer.features;
 
     if (features.length !== 0) {
-      for (var i = 0; i < featuresItemElements.length; i++) {
-        featuresItemElements[i].style.display = 'none';
-      }
+      Array.from(featuresItemElements).forEach(function (item) {
+        item.style.display = 'none';
+      });
 
-      for (var j = 0; j < features.length; j++) {
-        if (features[j] === 'wifi') {
+      features.forEach(function (feature) {
+        if (feature === 'wifi') {
           featuresListElement.querySelector('.popup__feature--wifi').style.display = 'inline-block';
         }
-        if (features[j] === 'dishwasher') {
+        if (feature === 'dishwasher') {
           featuresListElement.querySelector('.popup__feature--dishwasher').style.display = 'inline-block';
         }
-        if (features[j] === 'parking') {
+        if (feature === 'parking') {
           featuresListElement.querySelector('.popup__feature--parking').style.display = 'inline-block';
         }
-        if (features[j] === 'washer') {
+        if (feature === 'washer') {
           featuresListElement.querySelector('.popup__feature--washer').style.display = 'inline-block';
         }
-        if (features[j] === 'elevator') {
+        if (feature === 'elevator') {
           featuresListElement.querySelector('.popup__feature--elevator').style.display = 'inline-block';
         }
-        if (features[j] === 'conditioner') {
+        if (feature === 'conditioner') {
           featuresListElement.querySelector('.popup__feature--conditioner').style.display = 'inline-block';
         }
-      }
+      });
     } else {
       featuresListElement.style.display = 'none';
     }
@@ -92,11 +92,11 @@
 
     if (photos.length !== 0) {
       photosListElement.innerHTML = '';
-      for (i = 0; i < photos.length; i++) {
+      photos.forEach(function (photo) {
         var photoCopyElement = photosItemElement.cloneNode(true);
         photosListElement.appendChild(photoCopyElement);
-        photoCopyElement.src = photos[i];
-      }
+        photoCopyElement.src = photo;
+      });
     } else {
       photosListElement.style.display = 'none';
     }
