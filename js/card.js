@@ -3,9 +3,9 @@
 (function () {
   var mapFiltersElement = document.querySelector('.map__filters-container');
 
-  window.showCard = function (arrayAds) {
-    var mapPinsClickHandler = function (evt) {
-      var mapPinElements = document.querySelectorAll('[type=button]');
+  window.card.showCard = function (arrayAds) {
+    window.card.mapPinsClickHandler = function (evt) {
+      var mapPinElements = window.map.getMapPins();
       window.map.removeCard();
       var target = evt.target;
       for (var i = 0; i < mapPinElements.length; i++) {
@@ -16,10 +16,11 @@
           mapPinElements[i].classList.add('map__pin--active');
         }
       }
+
       document.addEventListener('keydown', window.map.documentEscKeyHandler);
       window.map.closeCard();
     };
 
-    window.pins.mapPinsElement.addEventListener('click', mapPinsClickHandler);
+    window.pins.mapPinsElement.addEventListener('click', window.card.mapPinsClickHandler);
   };
 })();

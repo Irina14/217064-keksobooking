@@ -22,7 +22,7 @@
     setActiveState();
     getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
     window.pins.showPins(ads);
-    window.showCard(ads);
+    window.card.showCard(ads);
     window.filter.updateAds(ads);
   };
 
@@ -31,9 +31,9 @@
   };
 
   var disableFieldset = function (boolean) {
-    for (var i = 0; i < fieldsetElements.length; i++) {
-      fieldsetElements[i].disabled = boolean;
-    }
+    Array.from(fieldsetElements).forEach(function (fieldset) {
+      fieldset.disabled = boolean;
+    });
   };
 
   var setActiveState = function () {
@@ -134,23 +134,26 @@
     }
   };
 
+  var getMapPins = function () {
+    var mapPinElements = document.querySelectorAll('[type=button]');
+    return mapPinElements;
+  };
+
   var removeCard = function () {
     if (cards.length !== 0) {
-      var mapPinElements = document.querySelectorAll('[type=button]');
       mapElement.removeChild(cards[0]);
       cards.shift();
       document.removeEventListener('keydown', documentEscKeyHandler);
-      for (var i = 0; i < mapPinElements.length; i++) {
-        mapPinElements[i].classList.remove('map__pin--active');
-      }
+      Array.from(getMapPins()).forEach(function (mapPin) {
+        mapPin.classList.remove('map__pin--active');
+      });
     }
   };
 
   var removePins = function () {
-    var mapPinElements = document.querySelectorAll('[type=button]');
-    for (var i = 0; i < mapPinElements.length; i++) {
-      window.pins.mapPinsElement.removeChild(mapPinElements[i]);
-    }
+    Array.from(getMapPins()).forEach(function (mapPin) {
+      window.pins.mapPinsElement.removeChild(mapPin);
+    });
   };
 
   var setInactiveState = function () {
@@ -176,6 +179,7 @@
     cards: cards,
     documentEscKeyHandler: documentEscKeyHandler,
     getLocationX: getLocationX,
-    getLocationY: getLocationY
+    getLocationY: getLocationY,
+    getMapPins: getMapPins
   };
 })();

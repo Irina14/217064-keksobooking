@@ -19,8 +19,9 @@
         window.map.removeCard();
         window.map.removePins();
         if (filterAds.length !== 0) {
+          window.pins.mapPinsElement.removeEventListener('click', window.card.mapPinsClickHandler);
           window.pins.showPins(filterAds);
-          window.showCard(filterAds);
+          window.card.showCard(filterAds);
         }
       };
 

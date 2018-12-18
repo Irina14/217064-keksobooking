@@ -2,10 +2,12 @@
 
 (function () {
   var TIME = 10000;
-  var SUCCESS_CODE = 200;
-  var ERROR_BAD_REQUEST_CODE = 400;
-  var ERROR_NOT_FOUND_CODE = 404;
-  var ERROR_SERVER_CODE = 500;
+  var Code = {
+    SUCCESS: 200,
+    ERROR_BAD_REQUEST: 400,
+    ERROR_NOT_FOUND: 404,
+    ERROR_SERVER: 500
+  };
 
   var load = function (successHandler, errorHandler) {
     var xhr = new XMLHttpRequest();
@@ -14,16 +16,16 @@
     xhr.addEventListener('load', function () {
       var error;
       switch (xhr.status) {
-        case SUCCESS_CODE:
+        case Code.SUCCESS:
           successHandler(xhr.response);
           break;
-        case ERROR_BAD_REQUEST_CODE:
+        case Code.ERROR_BAD_REQUEST_CODE:
           error = 'Неверный запрос';
           break;
-        case ERROR_NOT_FOUND_CODE:
+        case Code.ERROR_NOT_FOUND:
           error = 'Ничего не найдено';
           break;
-        case ERROR_SERVER_CODE:
+        case Code.ERROR_SERVER:
           error = 'Внутренняя ошибка сервера';
           break;
         default:
@@ -56,13 +58,13 @@
     xhr.addEventListener('load', function () {
       var error;
       switch (xhr.status) {
-        case SUCCESS_CODE:
+        case Code.SUCCESS:
           successHandler(xhr.response);
           break;
-        case ERROR_BAD_REQUEST_CODE:
+        case Code.ERROR_BAD_REQUEST_CODE:
           error = 'Неверный запрос';
           break;
-        case ERROR_SERVER_CODE:
+        case Code.ERROR_SERVER:
           error = 'Внутренняя ошибка сервера';
           break;
         default:
