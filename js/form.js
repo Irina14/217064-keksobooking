@@ -23,53 +23,52 @@
 
 
   var typeSelectChangeHandler = function () {
-    for (var i = 0; i < typeOptionElements.length; i++) {
-      var typeOption = typeOptionElements[i];
-      if (typeOption.selected) {
-        if (typeOption.value === 'bungalo') {
+    Array.from(typeOptionElements).forEach(function (option) {
+      if (option.selected) {
+        if (option.value === 'bungalo') {
           priceInputElement.min = MIN_PRICE_BUNGALO;
           priceInputElement.placeholder = MIN_PRICE_BUNGALO;
         }
-        if (typeOption.value === 'flat') {
+        if (option.value === 'flat') {
           priceInputElement.min = MIN_PRICE_FLAT;
           priceInputElement.placeholder = MIN_PRICE_FLAT;
         }
-        if (typeOption.value === 'house') {
+        if (option.value === 'house') {
           priceInputElement.min = MIN_PRICE_HOUSE;
           priceInputElement.placeholder = MIN_PRICE_HOUSE;
         }
-        if (typeOption.value === 'palace') {
+        if (option.value === 'palace') {
           priceInputElement.min = MIN_PRICE_PALACE;
           priceInputElement.placeholder = MIN_PRICE_PALACE;
         }
       }
-    }
+    });
   };
 
   var roomNumberChangeHandler = function () {
-    for (var i = 0; i < roomNumberOptionElements.length; i++) {
-      if (roomNumberOptionElements[i].selected) {
-        if (roomNumberOptionElements[i].value === '1') {
+    Array.from(roomNumberOptionElements).forEach(function (option) {
+      if (option.selected) {
+        if (option.value === '1') {
           removeCapacityOptions();
           appendCapacityOption(2);
         }
-        if (roomNumberOptionElements[i].value === '2') {
+        if (option.value === '2') {
           removeCapacityOptions();
           appendCapacityOption(1);
           appendCapacityOption(2);
         }
-        if (roomNumberOptionElements[i].value === '3') {
+        if (option.value === '3') {
           removeCapacityOptions();
           appendCapacityOption(0);
           appendCapacityOption(1);
           appendCapacityOption(2);
         }
-        if (roomNumberOptionElements[i].value === '100') {
+        if (option.value === '100') {
           removeCapacityOptions();
           appendCapacityOption(3);
         }
       }
-    }
+    });
   };
 
   var copyCapacitySelect = function () {

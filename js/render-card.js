@@ -37,8 +37,6 @@
     var featuresItemElements = featuresListElement.querySelectorAll('.popup__feature');
     var photosListElement = cardElement.querySelector('.popup__photos');
     var photosItemElement = photosListElement.querySelector('.popup__photo');
-    var features = ad.offer.features;
-    var photos = ad.offer.photos;
 
     cardElement.querySelector('.popup__title').textContent = ad.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = ad.offer.address;
@@ -59,46 +57,49 @@
       cardElement.querySelector('.popup__avatar').src = 'img/avatars/default.png';
     }
 
-    if (features.length !== 0) {
-      for (var i = 0; i < featuresItemElements.length; i++) {
-        featuresItemElements[i].style.display = 'none';
-      }
+    var features = ad.offer.features;
 
-      for (var j = 0; j < features.length; j++) {
-        if (features[j] === 'wifi') {
+    if (features.length !== 0) {
+      Array.from(featuresItemElements).forEach(function (item) {
+        item.style.display = 'none';
+      });
+
+      features.forEach(function (feature) {
+        if (feature === 'wifi') {
           featuresListElement.querySelector('.popup__feature--wifi').style.display = 'inline-block';
         }
-        if (features[j] === 'dishwasher') {
+        if (feature === 'dishwasher') {
           featuresListElement.querySelector('.popup__feature--dishwasher').style.display = 'inline-block';
         }
-        if (features[j] === 'parking') {
+        if (feature === 'parking') {
           featuresListElement.querySelector('.popup__feature--parking').style.display = 'inline-block';
         }
-        if (features[j] === 'washer') {
+        if (feature === 'washer') {
           featuresListElement.querySelector('.popup__feature--washer').style.display = 'inline-block';
         }
-        if (features[j] === 'elevator') {
+        if (feature === 'elevator') {
           featuresListElement.querySelector('.popup__feature--elevator').style.display = 'inline-block';
         }
-        if (features[j] === 'conditioner') {
+        if (feature === 'conditioner') {
           featuresListElement.querySelector('.popup__feature--conditioner').style.display = 'inline-block';
         }
-      }
+      });
     } else {
       featuresListElement.style.display = 'none';
     }
 
+    var photos = ad.offer.photos;
+
     if (photos.length !== 0) {
       photosListElement.innerHTML = '';
-      for (i = 0; i < photos.length; i++) {
+      photos.forEach(function (photo) {
         var photoCopyElement = photosItemElement.cloneNode(true);
         photosListElement.appendChild(photoCopyElement);
-        photoCopyElement.src = photos[i];
-      }
+        photoCopyElement.src = photo;
+      });
     } else {
       photosListElement.style.display = 'none';
     }
-
     return cardElement;
   };
 })();
