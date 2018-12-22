@@ -9,54 +9,84 @@
   var GRAY_COLOR = '#999999';
 
 
-  var adFormFieldElement = document.querySelector('.ad-form__field');
-  var fileChooserElement = adFormFieldElement.querySelector('.ad-form-header__input');
-  var previewElement = document.querySelector('.ad-form-header__preview img');
-  var dropZoneAvatarElement = adFormFieldElement.querySelector('.ad-form-header__drop-zone');
+  var adFormAvatarElement = document.querySelector('.ad-form__field');
+  var adFormPhotoElement = document.querySelector('.ad-form__upload');
+  var fileChooserAvatarElement = adFormAvatarElement.querySelector('.ad-form-header__input');
+  var fileChooserPhotoElement = adFormPhotoElement.querySelector('.ad-form__input');
+  var previewAvatarElement = document.querySelector('.ad-form-header__preview img');
+  var previewPhotoElement = document.querySelector('.ad-form__photo');
+  var dropZoneAvatarElement = adFormAvatarElement.querySelector('.ad-form-header__drop-zone');
+  var dropZonePhotoElement = adFormPhotoElement.querySelector('.ad-form__drop-zone');
 
-  var readFile = function (file) {
+  var previewFile = function (file, readFile) {
     var fileName = file.name.toLowerCase();
-
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
     });
 
     if (matches) {
-      var reader = new FileReader();
-
-      reader.addEventListener('load', function () {
-        previewElement.src = reader.result;
-      });
-
-      reader.readAsDataURL(file);
+      readFile(file);
     }
   };
 
-  fileChooserElement.addEventListener('change', function () {
-    var file = fileChooserElement.files[0];
-    readFile(file);
-  });
-
-  EVENT_NAMES.forEach(function (eventName) {
-    adFormFieldElement.addEventListener(eventName, function (evt) {
-      evt.preventDefault();
+  var readFileAvatar = function (file) {
+    var reader = new FileReader();
+    reader.addEventListener('load', function () {
+      previewAvatarElement.src = reader.result;
     });
-  });
+    reader.readAsDataURL(file);
+  };
 
-  EVENT_NAMES_ONE.forEach(function (eventName) {
-    adFormFieldElement.addEventListener(eventName, function () {
-      dropZoneAvatarElement.style.borderColor = RED_COLOR;
+  var readFilePhoto = function (file) {
+    var reader = new FileReader();
+    reader.addEventListener('load', function () {
+      var imageElement = document.createElement('img');
+      imageElement.src = reader.result;
+      previewPhotoElement.appendChild(imageElement);
     });
-  });
+    reader.readAsDataURL(file);
+  };
 
-  EVENT_NAMES_TWO.forEach(function (eventName) {
-    adFormFieldElement.addEventListener(eventName, function () {
-      dropZoneAvatarElement.style.borderColor = GRAY_COLOR;
+  var addEvents = function (form, dropZone) {
+    EVENT_NAMES.forEach(function (eventName) {
+      form.addEventListener(eventName, function (evt) {
+        evt.preventDefault();
+      });
     });
+
+    EVENT_NAMES_ONE.forEach(function (eventName) {
+      form.addEventListener(eventName, function () {
+        dropZone.style.borderColor = RED_COLOR;
+      });
+    });
+
+    EVENT_NAMES_TWO.forEach(function (eventName) {
+      form.addEventListener(eventName, function () {
+        dropZone.style.borderColor = GRAY_COLOR;
+      });
+    });
+  };
+
+  addEvents(adFormAvatarElement, dropZoneAvatarElement);
+  addEvents(adFormPhotoElement, dropZonePhotoElement);
+
+  fileChooserAvatarElement.addEventListener('change', function () {
+    var file = fileChooserAvatarElement.files[0];
+    previewFile(file, readFileAvatar);
   });
 
-  adFormFieldElement.addEventListener('drop', function (evt) {
+  adFormAvatarElement.addEventListener('drop', function (evt) {
     var file = evt.dataTransfer.files[0];
-    readFile(file);
+    previewFile(file, readFileAvatar);
+  });
+
+  fileChooserPhotoElement.addEventListener('change', function () {
+    var file = fileChooserPhotoElement.files[0];
+    previewFile(file, readFilePhoto);
+  });
+
+  adFormPhotoElement.addEventListener('drop', function (evt) {
+    var file = evt.dataTransfer.files[0];
+    previewFile(file, readFilePhoto);
   });
 })();
