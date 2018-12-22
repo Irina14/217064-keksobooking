@@ -135,6 +135,7 @@
     var successElement = document.querySelector('.success');
     if (successElement) {
       mainElement.removeChild(successElement);
+      window.map.disableFieldset(true);
     }
   };
 
