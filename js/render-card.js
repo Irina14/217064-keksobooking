@@ -1,22 +1,29 @@
 'use strict';
 
 (function () {
+  var AccomodationType = {
+    FLAT: 'Квартира',
+    BUNGALO: 'Бунгало',
+    HOUSE: 'Дом',
+    PALACE: 'Дворец',
+  };
+
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 
   var getType = function (type) {
     var typeValue;
     switch (type) {
       case 'flat':
-        typeValue = 'Квартира';
+        typeValue = AccomodationType.FLAT;
         break;
       case 'bungalo':
-        typeValue = 'Бунгало';
+        typeValue = AccomodationType.BUNGALO;
         break;
       case 'house':
-        typeValue = 'Дом';
+        typeValue = AccomodationType.HOUSE;
         break;
       default:
-        typeValue = 'Дворец';
+        typeValue = AccomodationType.PALACE;
     }
     return typeValue;
   };
