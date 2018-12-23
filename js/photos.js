@@ -81,12 +81,16 @@
   });
 
   fileChooserPhotoElement.addEventListener('change', function () {
-    var file = fileChooserPhotoElement.files[0];
-    previewFile(file, readFilePhoto);
+    var files = Array.from(fileChooserPhotoElement.files);
+    files.forEach(function (file) {
+      previewFile(file, readFilePhoto);
+    });
   });
 
   adFormPhotoElement.addEventListener('drop', function (evt) {
-    var file = evt.dataTransfer.files[0];
-    previewFile(file, readFilePhoto);
+    var files = Array.from(evt.dataTransfer.files);
+    files.forEach(function (file) {
+      previewFile(file, readFilePhoto);
+    });
   });
 })();
