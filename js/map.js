@@ -159,7 +159,6 @@
   var setInactiveState = function () {
     mapElement.classList.add('map--faded');
     window.form.adFormElement.classList.add('ad-form--disabled');
-    disableFieldset(true);
     removeCard();
     removePins();
     mapPinMainElement.style.left = PIN_MAIN_LEFT + 'px';
@@ -172,6 +171,7 @@
 
   window.map = {
     setInactiveState: setInactiveState,
+    disableFieldset: disableFieldset,
     removePins: removePins,
     closeCard: closeCard,
     removeCard: removeCard,
