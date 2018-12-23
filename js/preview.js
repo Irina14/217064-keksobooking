@@ -85,6 +85,7 @@
     files.forEach(function (file) {
       previewFile(file, readFilePhoto);
     });
+    window.sortPhotos(previewPhotoElement);
   });
 
   adFormPhotoElement.addEventListener('drop', function (evt) {
@@ -92,5 +93,6 @@
     files.forEach(function (file) {
       previewFile(file, readFilePhoto);
     });
+    window.sortPhotos(previewPhotoElement);
   });
 })();
