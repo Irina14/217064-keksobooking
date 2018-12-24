@@ -7,6 +7,7 @@
   var EVENT_NAMES_TWO = ['dragleave', 'drop'];
   var RED_COLOR = '#ff5635';
   var GRAY_COLOR = '#999999';
+  var IMAGE_AVATAR = 'img/muffin-grey.svg';
 
 
   var adFormAvatarElement = document.querySelector('.ad-form__field');
@@ -67,6 +68,14 @@
     });
   };
 
+  var removeAvatar = function () {
+    previewAvatarElement.src = IMAGE_AVATAR;
+  };
+
+  var removePhotos = function () {
+    previewPhotoElement.innerHTML = '';
+  };
+
   addEvents(adFormAvatarElement, dropZoneAvatarElement);
   addEvents(adFormPhotoElement, dropZonePhotoElement);
 
@@ -95,4 +104,9 @@
     });
     window.sortPhotos(previewPhotoElement);
   });
+
+  window.preview = {
+    removeAvatar: removeAvatar,
+    removePhotos: removePhotos
+  };
 })();

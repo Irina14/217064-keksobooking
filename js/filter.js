@@ -288,7 +288,12 @@
     filtersElement.addEventListener('change', filterChangeHandler);
   };
 
+  var resetFilter = function () {
+    filtersElement.reset();
+  };
+
   window.filter = {
-    updateAds: updateAds
+    updateAds: updateAds,
+    resetFilter: resetFilter
   };
 })();

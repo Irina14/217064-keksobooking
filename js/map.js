@@ -166,6 +166,9 @@
     mapPinMainElement.style.left = PIN_MAIN_LEFT + 'px';
     mapPinMainElement.style.top = PIN_MAIN_TOP + 'px';
     getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
+    window.preview.removeAvatar();
+    window.preview.removePhotos();
+    window.filter.resetFilter();
   };
 
   disableElements(fieldsetElements, true);
