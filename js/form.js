@@ -8,6 +8,7 @@
 
   var adFormElement = document.querySelector('.ad-form');
   var priceInputElement = adFormElement.querySelector('#price');
+  var titleInputElement = adFormElement.querySelector('#title');
   var typeSelectElement = adFormElement.querySelector('#type');
   var typeOptionElements = typeSelectElement.options;
   var timeinSelectElement = adFormElement.querySelector('#timein');
@@ -121,6 +122,28 @@
     submitButtonElement.disabled = true;
   };
 
+  var submitButtonClickHandler = function () {
+    if (!titleInputElement.validity.valid) {
+      titleInputElement.classList.add('ad-form__error');
+    }
+
+    if (!priceInputElement.validity.valid) {
+      priceInputElement.classList.add('ad-form__error');
+    }
+  };
+
+  var titleInputHandler = function () {
+    if (titleInputElement.validity.valid) {
+      titleInputElement.classList.remove('ad-form__error');
+    }
+  };
+
+  var priceInputHandler = function () {
+    if (priceInputElement.validity.valid) {
+      priceInputElement.classList.remove('ad-form__error');
+    }
+  };
+
   var documentEscKeyHandler = function (evt) {
     window.util.isEscEvent(evt, closeSuccessMessage);
     window.util.isEscEvent(evt, closeErrorMessage);
@@ -153,6 +176,9 @@
   };
 
   adFormElement.addEventListener('submit', adFormSubmitHandler);
+  submitButtonElement.addEventListener('click', submitButtonClickHandler);
+  titleInputElement.addEventListener('input', titleInputHandler);
+  priceInputElement.addEventListener('input', priceInputHandler);
   resetButtonElement.addEventListener('click', resetButtonClickHandler);
   document.addEventListener('keydown', documentEscKeyHandler);
   document.addEventListener('click', documentClickHandler);
