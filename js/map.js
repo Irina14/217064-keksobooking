@@ -13,6 +13,7 @@
   var mapElement = document.querySelector('.map');
   var mapPinMainElement = mapElement.querySelector('.map__pin--main');
   var fieldsetElements = document.querySelectorAll('fieldset');
+  var filterElements = document.querySelectorAll('.map__filter');
   var addressInputElement = window.form.adFormElement.querySelector('#address');
   var cards = [];
 
@@ -30,16 +31,17 @@
     window.form.mainElement.appendChild(window.renderMessage.renderErrorMessageMap(errorMessage));
   };
 
-  var disableFieldset = function (boolean) {
-    Array.from(fieldsetElements).forEach(function (fieldset) {
-      fieldset.disabled = boolean;
+  var disableElements = function (elements, boolean) {
+    Array.from(elements).forEach(function (element) {
+      element.disabled = boolean;
     });
   };
 
   var setActiveState = function () {
     mapElement.classList.remove('map--faded');
     window.form.adFormElement.classList.remove('ad-form--disabled');
-    disableFieldset(false);
+    disableElements(fieldsetElements, false);
+    disableElements(filterElements, false);
   };
 
   var getLocationX = function () {
@@ -166,12 +168,15 @@
     getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
   };
 
-  disableFieldset(true);
+  disableElements(fieldsetElements, true);
+  disableElements(filterElements, true);
   getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_RADIUS);
 
   window.map = {
     setInactiveState: setInactiveState,
-    disableFieldset: disableFieldset,
+    disableElements: disableElements,
+    fieldsetElements: fieldsetElements,
+    filterElements: filterElements,
     removePins: removePins,
     closeCard: closeCard,
     removeCard: removeCard,
