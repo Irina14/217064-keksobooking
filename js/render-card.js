@@ -1,11 +1,25 @@
 'use strict';
 
 (function () {
-  var AccomodationType = {
+  var ValueTypeHousing = {
     FLAT: 'Квартира',
     BUNGALO: 'Бунгало',
     HOUSE: 'Дом',
     PALACE: 'Дворец',
+  };
+
+  var RoomNumber = {
+    ONE: 1,
+    FIVE: 5
+  };
+
+  var Feature = {
+    WIFI: 'wifi',
+    DISHWASHER: 'dishwasher',
+    PARKING: 'parking',
+    WASHER: 'washer',
+    ELEVATOR: 'elevator',
+    CONDITIONER: 'conditioner'
   };
 
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
@@ -13,26 +27,26 @@
   var getType = function (type) {
     var typeValue;
     switch (type) {
-      case 'flat':
-        typeValue = AccomodationType.FLAT;
+      case window.form.TypeHousing.FLAT:
+        typeValue = ValueTypeHousing.FLAT;
         break;
-      case 'bungalo':
-        typeValue = AccomodationType.BUNGALO;
+      case window.form.TypeHousing.BUNGALO:
+        typeValue = ValueTypeHousing.BUNGALO;
         break;
-      case 'house':
-        typeValue = AccomodationType.HOUSE;
+      case window.form.TypeHousing.HOUSE:
+        typeValue = ValueTypeHousing.HOUSE;
         break;
       default:
-        typeValue = AccomodationType.PALACE;
+        typeValue = ValueTypeHousing.PALACE;
     }
     return typeValue;
   };
 
   var getRooms = function (rooms) {
-    if (rooms === 1) {
+    if (rooms === RoomNumber.ONE) {
       return ' комната для ';
     }
-    if (rooms >= 5) {
+    if (rooms >= RoomNumber.FIVE) {
       return ' комнат для ';
     }
     return ' комнаты для ';
@@ -72,22 +86,22 @@
       });
 
       features.forEach(function (feature) {
-        if (feature === 'wifi') {
+        if (feature === Feature.WIFI) {
           featuresListElement.querySelector('.popup__feature--wifi').style.display = 'inline-block';
         }
-        if (feature === 'dishwasher') {
+        if (feature === Feature.DISHWASHER) {
           featuresListElement.querySelector('.popup__feature--dishwasher').style.display = 'inline-block';
         }
-        if (feature === 'parking') {
+        if (feature === Feature.PARKING) {
           featuresListElement.querySelector('.popup__feature--parking').style.display = 'inline-block';
         }
-        if (feature === 'washer') {
+        if (feature === Feature.WASHER) {
           featuresListElement.querySelector('.popup__feature--washer').style.display = 'inline-block';
         }
-        if (feature === 'elevator') {
+        if (feature === Feature.ELEVATOR) {
           featuresListElement.querySelector('.popup__feature--elevator').style.display = 'inline-block';
         }
-        if (feature === 'conditioner') {
+        if (feature === Feature.CONDITIONER) {
           featuresListElement.querySelector('.popup__feature--conditioner').style.display = 'inline-block';
         }
       });
