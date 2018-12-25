@@ -29,6 +29,8 @@
 
   var errorHandler = function (errorMessage) {
     window.form.mainElement.appendChild(window.renderMessage.renderErrorMessageMap(errorMessage));
+    document.addEventListener('keydown', window.form.documentEscKeyHandler);
+    document.addEventListener('click', window.form.documentClickHandler);
   };
 
   var disableElements = function (elements, boolean) {
