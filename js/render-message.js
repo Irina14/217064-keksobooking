@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var COLOR = '#ffffff';
+  var FONT_SIZE = '50px';
+  var FONT_WEIGHT = '700';
+
   var successTemplate = document.querySelector('#success').content.querySelector('.success');
   var errorTemplate = document.querySelector('#error').content.querySelector('.error');
 
@@ -14,9 +18,9 @@
     var errorButtonElement = errorElement.querySelector('.error__button');
     var errorMessageElement = document.createElement('p');
     errorMessageElement.style.position = 'relative';
-    errorMessageElement.style.color = '#ffffff';
-    errorMessageElement.style.fontSize = '50px';
-    errorMessageElement.style.fontWeight = '700';
+    errorMessageElement.style.color = COLOR;
+    errorMessageElement.style.fontSize = FONT_SIZE;
+    errorMessageElement.style.fontWeight = FONT_WEIGHT;
     errorMessageElement.textContent = errorMessage;
     errorElement.insertBefore(errorMessageElement, errorButtonElement);
     return errorElement;
