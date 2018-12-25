@@ -3,8 +3,8 @@
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
   var EVENT_NAMES = ['dragenter', 'dragover', 'dragleave', 'drop'];
-  var EVENT_NAMES_ONE = ['dragenter', 'dragover'];
-  var EVENT_NAMES_TWO = ['dragleave', 'drop'];
+  var ONE_EVENT_NAMES = ['dragenter', 'dragover'];
+  var TWO_EVENT_NAMES = ['dragleave', 'drop'];
   var RED_COLOR = '#ff5635';
   var GRAY_COLOR = '#999999';
   var IMAGE_AVATAR = 'img/muffin-grey.svg';
@@ -55,13 +55,13 @@
       });
     });
 
-    EVENT_NAMES_ONE.forEach(function (eventName) {
+    ONE_EVENT_NAMES.forEach(function (eventName) {
       form.addEventListener(eventName, function () {
         dropZone.style.borderColor = RED_COLOR;
       });
     });
 
-    EVENT_NAMES_TWO.forEach(function (eventName) {
+    TWO_EVENT_NAMES.forEach(function (eventName) {
       form.addEventListener(eventName, function () {
         dropZone.style.borderColor = GRAY_COLOR;
       });

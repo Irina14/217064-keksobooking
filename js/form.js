@@ -224,6 +224,7 @@
     adFormElement: adFormElement,
     mainElement: mainElement,
     documentEscKeyHandler: documentEscKeyHandler,
-    documentClickHandler: documentClickHandler
+    documentClickHandler: documentClickHandler,
+    TypeHousing: TypeHousing
   };
 })();
