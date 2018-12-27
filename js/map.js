@@ -19,12 +19,12 @@
   var cards = [];
 
   var successHandler = function (data) {
-    var loadAds = data;
-    var ads = window.getSortAds(loadAds).slice(0, 5);
+    var ads = data;
+    var sortAds = window.getSortAds(ads).slice(0, 5);
     setActiveState();
     getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
-    window.pins.showPins(ads);
-    window.card.showCard(ads);
+    window.pins.showPins(sortAds);
+    window.card.showCard(sortAds);
     window.filter.updateAds(ads);
   };
 
