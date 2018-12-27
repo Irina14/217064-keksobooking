@@ -48,25 +48,11 @@
   };
 
   var getLocationX = function () {
-    var x = mapPinMainElement.offsetLeft;
-    if (x < X_MIN) {
-      x = X_MIN;
-    }
-    if (x > X_MAX - PIN_MAIN_WIDTH) {
-      x = X_MAX - PIN_MAIN_WIDTH;
-    }
-    return x;
+    return mapPinMainElement.offsetLeft;
   };
 
   var getLocationY = function () {
-    var y = mapPinMainElement.offsetTop;
-    if (y < Y_MIN) {
-      y = Y_MIN;
-    }
-    if (y > Y_MAX) {
-      y = Y_MAX;
-    }
-    return y;
+    return mapPinMainElement.offsetTop;
   };
 
   var getLocationPinMain = function (width, height) {
@@ -78,32 +64,37 @@
   mapPinMainElement.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
-
     var dragged = false;
+
+    var shift = {
+      x: evt.clientX - getLocationX(),
+      y: evt.clientY - getLocationY()
+    };
 
     var documentMouseMoveHandler = function (moveEvt) {
       moveEvt.preventDefault();
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
+      dragged = true;
 
-      if (shift.x !== 0 && shift.y !== 0) {
-        dragged = true;
+      var left = moveEvt.clientX - shift.x;
+      var top = moveEvt.clientY - shift.y;
+
+      if (left < X_MIN) {
+        left = X_MIN;
+      }
+      if (left > X_MAX - PIN_MAIN_WIDTH) {
+        left = X_MAX - PIN_MAIN_WIDTH;
       }
 
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
+      if (top < Y_MIN) {
+        top = Y_MIN;
+      }
+      if (top > Y_MAX) {
+        top = Y_MAX;
+      }
 
-      mapPinMainElement.style.left = (getLocationX() - shift.x) + 'px';
-      mapPinMainElement.style.top = (getLocationY() - shift.y) + 'px';
+      mapPinMainElement.style.left = left + 'px';
+      mapPinMainElement.style.top = top + 'px';
 
       getLocationPinMain(PIN_MAIN_RADIUS, PIN_MAIN_HEIGHT);
     };
