@@ -102,11 +102,26 @@
       var features = getValueFeatures();
 
       var filters = [
-        {filter: filterType, value: type},
-        {filter: filterPrice, value: price},
-        {filter: filterRooms, value: rooms},
-        {filter: filterGuests, value: guests},
-        {filter: filterFeatures, value: features}
+        {
+          filter: filterType,
+          value: type
+        },
+        {
+          filter: filterPrice,
+          value: price
+        },
+        {
+          filter: filterRooms,
+          value: rooms
+        },
+        {
+          filter: filterGuests,
+          value: guests
+        },
+        {
+          filter: filterFeatures,
+          value: features
+        }
       ];
 
       var selectedFilters = filters.filter(function (item) {
@@ -116,13 +131,13 @@
         return item.filter;
       });
 
-      var filterAdsAll = ads.filter(function (ad) {
+      var filterAllAds = ads.filter(function (ad) {
         return selectedFilters.every(function (filter) {
           return filter(ad);
         });
       });
 
-      var filterAds = window.getSortAds(filterAdsAll).slice(0, 5);
+      var filterAds = window.getSortAds(filterAllAds).slice(0, 5);
 
       showPinsAndCard();
     };
