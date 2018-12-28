@@ -22,21 +22,13 @@
     HUNDRED: '100'
   };
 
-  var CheckTime = {
-    MIDDAY: '12:00',
-    ONE_OCLOCK: '13:00',
-    TWO_OCLOCK: '14:00'
-  };
-
   var adFormElement = document.querySelector('.ad-form');
   var priceInputElement = adFormElement.querySelector('#price');
   var titleInputElement = adFormElement.querySelector('#title');
   var typeSelectElement = adFormElement.querySelector('#type');
   var typeOptionElements = typeSelectElement.options;
   var timeinSelectElement = adFormElement.querySelector('#timein');
-  var timeinOptionElements = timeinSelectElement.options;
   var timeoutSelectElement = adFormElement.querySelector('#timeout');
-  var timeoutOptionElements = timeoutSelectElement.options;
   var roomNumberSelectElement = adFormElement.querySelector('#room_number');
   var roomNumberOptionElements = roomNumberSelectElement.options;
   var capacitySelectElement = adFormElement.querySelector('#capacity');
@@ -107,22 +99,14 @@
     capacitySelectElement.appendChild(capacityOptionCopyElement);
   };
 
-  var getCheckTime = function (timeSelect, timeOptionsOne, timeOptionsTwo) {
-    timeSelect.addEventListener('change', function () {
-      for (var i = 0; i < timeOptionsOne.length; i++) {
-        if (timeOptionsOne[i].selected) {
-          if (timeOptionsOne[i].value === CheckTime.MIDDAY) {
-            timeOptionsTwo[0].selected = true;
-          }
-          if (timeOptionsOne[i].value === CheckTime.ONE_OCLOCK) {
-            timeOptionsTwo[1].selected = true;
-          }
-          if (timeOptionsOne[i].value === CheckTime.TWO_OCLOCK) {
-            timeOptionsTwo[2].selected = true;
-          }
-        }
-      }
-    });
+  var timeinChangeHandler = function () {
+    var index = timeinSelectElement.selectedIndex;
+    timeoutSelectElement.selectedIndex = index;
+  };
+
+  var timeoutChangeHandler = function () {
+    var index = timeoutSelectElement.selectedIndex;
+    timeinSelectElement.selectedIndex = index;
   };
 
   var successHandler = function () {
@@ -212,9 +196,8 @@
   resetButtonElement.addEventListener('click', resetButtonClickHandler);
   typeSelectElement.addEventListener('change', typeSelectChangeHandler);
   roomNumberSelectElement.addEventListener('change', roomNumberChangeHandler);
-
-  getCheckTime(timeinSelectElement, timeinOptionElements, timeoutOptionElements);
-  getCheckTime(timeoutSelectElement, timeoutOptionElements, timeinOptionElements);
+  timeinSelectElement.addEventListener('change', timeinChangeHandler);
+  timeoutSelectElement.addEventListener('change', timeoutChangeHandler);
 
   var capacitySelectCopyElement = copyCapacitySelect();
   removeCapacityOptions();
