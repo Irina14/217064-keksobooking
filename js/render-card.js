@@ -8,7 +8,7 @@
     FLAT: 'Квартира',
     BUNGALO: 'Бунгало',
     HOUSE: 'Дом',
-    PALACE: 'Дворец',
+    PALACE: 'Дворец'
   };
 
   var RoomsNumber = {
