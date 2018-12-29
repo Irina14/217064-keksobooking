@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var PRICE_UNIT = '₽/ночь';
+  var ONE_GUEST = 1;
+
   var ValueTypeHousing = {
     FLAT: 'Квартира',
     BUNGALO: 'Бунгало',
@@ -8,18 +11,26 @@
     PALACE: 'Дворец',
   };
 
-  var RoomNumber = {
+  var RoomsNumber = {
+    ZERO: 0,
     ONE: 1,
     FIVE: 5
   };
 
-  var Feature = {
-    WIFI: 'wifi',
-    DISHWASHER: 'dishwasher',
-    PARKING: 'parking',
-    WASHER: 'washer',
-    ELEVATOR: 'elevator',
-    CONDITIONER: 'conditioner'
+  var RoomsText = {
+    ONE: ' комната для ',
+    FIVE: ' комнат для ',
+    OTHER: ' комнаты для '
+  };
+
+  var GuestsText = {
+    ONE: ' гостя',
+    OTHER: ' гостей'
+  };
+
+  var TimeText = {
+    CHECK_IN: 'Заезд после ',
+    CHECK_OUT: ' выезд до '
   };
 
   var cardTemplate = document.querySelector('#card').content.querySelector('.map__card');
@@ -42,14 +53,18 @@
     return typeValue;
   };
 
-  var getRooms = function (rooms) {
-    if (rooms === RoomNumber.ONE) {
-      return ' комната для ';
+  var getRoomsText = function (rooms) {
+    if (rooms === RoomsNumber.ONE) {
+      return RoomsText.ONE;
     }
-    if (rooms >= RoomNumber.FIVE) {
-      return ' комнат для ';
+    if (rooms === RoomsNumber.ZERO || rooms >= RoomsNumber.FIVE) {
+      return RoomsText.FIVE;
     }
-    return ' комнаты для ';
+    return RoomsText.OTHER;
+  };
+
+  var getGuestsText = function (guests) {
+    return guests === ONE_GUEST ? GuestsText.ONE : GuestsText.OTHER;
   };
 
   window.renderCard = function (ad) {
@@ -61,10 +76,10 @@
 
     cardElement.querySelector('.popup__title').textContent = ad.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = ad.offer.address;
-    cardElement.querySelector('.popup__text--price').textContent = ad.offer.price + '₽/ночь';
+    cardElement.querySelector('.popup__text--price').textContent = ad.offer.price + PRICE_UNIT;
     cardElement.querySelector('.popup__type').textContent = getType(ad.offer.type);
-    cardElement.querySelector('.popup__text--capacity').textContent = ad.offer.rooms + getRooms(ad.offer.rooms) + ad.offer.guests + ' гостей';
-    cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + ad.offer.checkin + ' выезд до ' + ad.offer.checkout;
+    cardElement.querySelector('.popup__text--capacity').textContent = ad.offer.rooms + getRoomsText(ad.offer.rooms) + ad.offer.guests + getGuestsText(ad.offer.guests);
+    cardElement.querySelector('.popup__text--time').textContent = TimeText.CHECK_IN + ad.offer.checkin + TimeText.CHECK_OUT + ad.offer.checkout;
 
     if (ad.offer.description !== '') {
       cardElement.querySelector('.popup__description').textContent = ad.offer.description;
@@ -75,7 +90,7 @@
     if (ad.author.avatar !== '') {
       cardElement.querySelector('.popup__avatar').src = ad.author.avatar;
     } else {
-      cardElement.querySelector('.popup__avatar').src = 'img/avatars/default.png';
+      cardElement.querySelector('.popup__avatar').src = window.pin.IMAGE_AVATAR;
     }
 
     var features = ad.offer.features;
@@ -85,25 +100,13 @@
         item.style.display = 'none';
       });
 
-      features.forEach(function (feature) {
-        if (feature === Feature.WIFI) {
-          featuresListElement.querySelector('.popup__feature--wifi').style.display = 'inline-block';
-        }
-        if (feature === Feature.DISHWASHER) {
-          featuresListElement.querySelector('.popup__feature--dishwasher').style.display = 'inline-block';
-        }
-        if (feature === Feature.PARKING) {
-          featuresListElement.querySelector('.popup__feature--parking').style.display = 'inline-block';
-        }
-        if (feature === Feature.WASHER) {
-          featuresListElement.querySelector('.popup__feature--washer').style.display = 'inline-block';
-        }
-        if (feature === Feature.ELEVATOR) {
-          featuresListElement.querySelector('.popup__feature--elevator').style.display = 'inline-block';
-        }
-        if (feature === Feature.CONDITIONER) {
-          featuresListElement.querySelector('.popup__feature--conditioner').style.display = 'inline-block';
-        }
+      Array.from(featuresItemElements).forEach(function (item) {
+        var itemClass = item.classList;
+        features.forEach(function (feature) {
+          if (itemClass.contains('popup__feature--' + feature)) {
+            item.style.display = 'inline-block';
+          }
+        });
       });
     } else {
       featuresListElement.style.display = 'none';

@@ -7,7 +7,7 @@
     var arrayPins = [];
     var arrayAdsCopy = arrayAds.slice();
     arrayAdsCopy.forEach(function (ad) {
-      arrayPins.push(window.renderPin(ad));
+      arrayPins.push(window.pin.renderPin(ad));
     });
     return arrayPins;
   };
